@@ -12,32 +12,46 @@ import java.awt.event.*;
 
 public class MovieReviewApp{
     static JFrame f;
-    static JTextField t;
+    static JTextField inputText;
+    static JTextArea outText;
     static JButton load,delete,search;
 
     static final Scanner CONSOLE_INPUT = new Scanner(System.in);
+    private final static String newline = "\n";
 
     MovieReviewApp(){
-        f=new JFrame("MovieReviewApp");
+        f = new JFrame("MovieReviewApp");
         GridLayout grid = new GridLayout(8,3,2,4);
-        t=new JTextField();
+        inputText =new JTextField();
+
+
+        outText = new JTextArea(50, 20);
+        outText.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(outText);
+
 
         load = new JButton("Load");
         delete = new JButton("Delete");
         search = new JButton("Search");
 
 
-        f.add(t);
+        //f.add(outText);
+        f.add(scrollPane);
         f.add(load);
         f.add(delete);
         f.add(search);
+        f.add(inputText);
+
 
         f.setLayout(grid);
         f.setVisible(true);
         f.setSize(350,500);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setResizable(true);
+
     }
+
+
     private static class ButtonListener implements ActionListener {
         ReviewHandler rh = new ReviewHandler();
 
@@ -49,15 +63,20 @@ public class MovieReviewApp{
 
             if (e.getSource() == load){
                 // 1. Load new movie review collection (given a folder or a file path).
-                System.out.println("Please input the path of file or folder.");
+                //System.out.println("Please input the path of file or folder.");
                 // ./Data/Movie-reviews/neg
-                String path = t.getText();
+
+
+
+
+
+                String path = inputText.getText();
                 System.out.println(path);
                 //check if path exists
                 if (Files.exists(Path.of(path))){
-
-                    System.out.println("Please input real class (0, 1, 2).");
-                    System.out.println("0 = negative, 1 = positive, 2 = unknown.");
+                    System.out.println("loaded reviews @$");
+                    outText.append("Please input real class (0, 1, 2)." + newline);
+                    outText.append("0 = negative, 1 = positive, 2 = unknown." + newline);
 
                     //default is unknown
                     int realClass = 2;
@@ -81,6 +100,17 @@ public class MovieReviewApp{
                 }
 
             }
+
+
+
+
+
+
+
+
+
+
+
             if (e.getSource()== delete){
                 // 2. Delete movie review from database (given its id).
                 System.out.println("Please input review ID.");
@@ -110,8 +140,8 @@ public class MovieReviewApp{
                         int id = Integer.parseInt(idStr);
                         MovieReview mr = rh.searchById(id);
                         if (mr != null) {
-                            printTableHead();
-                            printTableContent(mr);
+                            //printTableHead();
+                            //printTableContent(mr);
                         } else {
                             System.out.println("Review not found.");
                         }
@@ -136,6 +166,9 @@ public class MovieReviewApp{
                 }
             }
         }
+
+
+
         public static void printTableHead() {
             String line = "------------------------------------------------------------------------------------------";
             String information = "| ";
@@ -160,6 +193,7 @@ public class MovieReviewApp{
             System.out.println(information);
             System.out.println(line);
         }
+
     }
     public static void main(String [] args) {
         // Create ReviewHandler object
@@ -167,6 +201,8 @@ public class MovieReviewApp{
 
         new MovieReviewApp();
         ButtonListener listen = new ButtonListener(rh);
+
+        outText.append("Please input the path of file or folder and click load." + newline);
 
         //-------------------------Stuff from orignal movie review app ----------------------
         // Check if the correct number of arguments was provided
@@ -186,6 +222,7 @@ public class MovieReviewApp{
         try {
             // Load the positive and negative words
             rh.loadPosNegWords(pathToPosWords, pathToNegWords);
+            System.out.println("loaded words");
         } catch (IOException ex) {
             System.err.println("Could not load positive and negative words. "
                     + "Please check that the file paths are correct and try again.");
