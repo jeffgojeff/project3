@@ -2,35 +2,42 @@ package project3;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.*;
+import javax.swing.SwingUtilities;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.filechooser.*;
 
 public class MovieReviewApp{
     static JFrame f;
     static JTextField inputText;
     static JTextArea outText;
     static JButton load,delete,search;
+    static JFileChooser fileChooser;
+
 
     static final Scanner CONSOLE_INPUT = new Scanner(System.in);
     private final static String newline = "\n";
 
     MovieReviewApp(){
         f = new JFrame("MovieReviewApp");
-        GridLayout grid = new GridLayout(8,3,2,4);
+        GridLayout grid = new GridLayout(5,3,2,4);
         inputText =new JTextField();
 
 
         outText = new JTextArea(50, 20);
         outText.setEditable(false);
+
         JScrollPane scrollPane = new JScrollPane(outText);
 
 
-        load = new JButton("Load");
+
+
+        load = new JButton("Load Database");
         delete = new JButton("Delete");
         search = new JButton("Search");
 
@@ -66,13 +73,28 @@ public class MovieReviewApp{
                 //System.out.println("Please input the path of file or folder.");
                 // ./Data/Movie-reviews/neg
 
+                fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+                int returnVal = fileChooser.showOpenDialog(null);
 
 
+                if (returnVal == JFileChooser.APPROVE_OPTION){
+                    outText.append("Loading DataBase from: " + newline + fileChooser.getSelectedFile().getAbsolutePath());
+                }
+                else{
+                    outText.append("Selection cancelled" + newline);
+                }
 
 
+         /*
                 String path = inputText.getText();
+                inputText.setText(newline);
                 System.out.println(path);
+
                 //check if path exists
+
+
                 if (Files.exists(Path.of(path))){
                     System.out.println("loaded reviews @$");
                     outText.append("Please input real class (0, 1, 2)." + newline);
@@ -99,6 +121,14 @@ public class MovieReviewApp{
                     System.out.println("Try again.");
                 }
 
+
+
+
+          */
+
+
+
+
             }
 
 
@@ -124,6 +154,8 @@ public class MovieReviewApp{
                     rh.deleteReview(id);
                 }
             }
+
+
             if (e.getSource() == search){
                 // 3. Search movie reviews in database by id or by matching a substring.
                 System.out.println("Please input your command (1, 2).");
@@ -202,7 +234,7 @@ public class MovieReviewApp{
         new MovieReviewApp();
         ButtonListener listen = new ButtonListener(rh);
 
-        outText.append("Please input the path of file or folder and click load." + newline);
+        outText.append("Please click load database and find the directory containing the database." + newline);
 
         //-------------------------Stuff from orignal movie review app ----------------------
         // Check if the correct number of arguments was provided
