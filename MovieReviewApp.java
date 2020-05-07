@@ -26,6 +26,7 @@ public class MovieReviewApp{
         delete = new JButton("Delete");
         search = new JButton("Search");
 
+
         f.add(t);
         f.add(load);
         f.add(delete);
@@ -38,7 +39,7 @@ public class MovieReviewApp{
         f.setResizable(true);
     }
     private static class ButtonListener implements ActionListener {
-        ReviewHandler rh;
+        ReviewHandler rh = new ReviewHandler();
 
         public ButtonListener(ReviewHandler rh){
             this.rh = rh;
@@ -50,7 +51,8 @@ public class MovieReviewApp{
                 // 1. Load new movie review collection (given a folder or a file path).
                 System.out.println("Please input the path of file or folder.");
                 // ./Data/Movie-reviews/neg
-                String path = CONSOLE_INPUT.nextLine();
+                String path = t.getText();
+                System.out.println(path);
                 //check if path exists
                 if (Files.exists(Path.of(path))){
 
@@ -168,13 +170,16 @@ public class MovieReviewApp{
 
         //-------------------------Stuff from orignal movie review app ----------------------
         // Check if the correct number of arguments was provided
+        /*
         if (args.length < 2) {
             System.err.println("Please provide command liner arguments: <posFilePath> and <negFilePath>");
             return;
         }
+        */
 
-        String pathToPosWords = args[0];
-        String pathToNegWords = args[1];
+
+        String pathToPosWords = "./data/positive-words.txt";
+        String pathToNegWords = "./data/negative-words.txt";
 
 
 
