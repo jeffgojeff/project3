@@ -1,22 +1,20 @@
 package project3;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.io.*;
 import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.*;
-import javax.swing.SwingUtilities;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.filechooser.*;
+import java.awt.FlowLayout;
+import java.util.concurrent.Flow;
 
 public class MovieReviewApp{
     static JFrame f;
-    static JTextField inputText;
+    static JTextField inputText, inputBox;
     static JTextArea outText;
-    static JButton load,delete,search;
+    static JButton loadDataBase, delete, search, loadReview;
     static JFileChooser fileChooser;
 
 
@@ -37,14 +35,16 @@ public class MovieReviewApp{
 
 
 
-        load = new JButton("Load Database");
+        loadDataBase = new JButton("Load Database");
         delete = new JButton("Delete");
         search = new JButton("Search");
+        loadReview = new JButton("Load Reviews");
 
 
         //f.add(outText);
         f.add(scrollPane);
-        f.add(load);
+        f.add(loadDataBase);
+        f.add(loadReview);
         f.add(delete);
         f.add(search);
         f.add(inputText);
@@ -58,6 +58,58 @@ public class MovieReviewApp{
 
     }
 
+   private static void newWindow(){
+
+        JFrame window = new JFrame("Actual Rating");
+        window.setSize(500,200);
+
+       JRadioButton option1 = new JRadioButton("Positive");
+       JRadioButton option2 = new JRadioButton("Negative");
+       JRadioButton option3 = new JRadioButton("Neutral");
+
+       JLabel label = new JLabel("What is the expected review result?");
+
+       /*
+       ButtonGroup group = new ButtonGroup();
+       group.add(option1);
+       group.add(option2);
+       group.add(option3);
+
+
+        */
+
+        window.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        //c.fill = GridBagConstraints.HORIZONTAL;
+        //c.insets = new Insets(2,2,2,2);
+        c.gridx = 0;
+        c.gridy = 0;
+        window.add(label, c);
+
+
+        //c.fill = GridBagConstraints.NONE;
+        c.gridx = 0;
+        c.gridy = 1;
+        window.add(option1, c);
+        c.gridx = 1;
+        c.gridy = 1;
+        window.add(option2, c);
+        c.gridx = 2;
+        c.gridy = 1;
+        window.add(option3, c);
+
+
+        //inputBox = new JTextField();
+        //window.add(inputBox);
+
+
+
+        System.out.println("" + newline + "hit");
+        window.setVisible(true);
+
+
+    }
+
 
     private static class ButtonListener implements ActionListener {
         ReviewHandler rh = new ReviewHandler();
@@ -68,7 +120,7 @@ public class MovieReviewApp{
 
         public void actionPerformed(ActionEvent e) {
 
-            if (e.getSource() == load){
+            if (e.getSource() == loadDataBase){
                 // 1. Load new movie review collection (given a folder or a file path).
                 //System.out.println("Please input the path of file or folder.");
                 // ./Data/Movie-reviews/neg
@@ -81,57 +133,50 @@ public class MovieReviewApp{
 
                 if (returnVal == JFileChooser.APPROVE_OPTION){
                     outText.append("Loading DataBase from: " + newline + fileChooser.getSelectedFile().getAbsolutePath());
+                    System.out.println("testing rh.loadDB()");
+                    try {
+                        rh.loadDB();
+                    } catch (IOException ex) {
+                        System.err.println("didn't load");
+                        return;
+                    }
                 }
                 else{
                     outText.append("Selection cancelled" + newline);
                 }
 
 
-         /*
-                String path = inputText.getText();
-                inputText.setText(newline);
-                System.out.println(path);
+            }
 
-                //check if path exists
+//***************************************************
 
 
-                if (Files.exists(Path.of(path))){
-                    System.out.println("loaded reviews @$");
-                    outText.append("Please input real class (0, 1, 2)." + newline);
-                    outText.append("0 = negative, 1 = positive, 2 = unknown." + newline);
+            if (e.getSource() == loadReview){
 
-                    //default is unknown
-                    int realClass = 2;
-                    String reviewStr = CONSOLE_INPUT.nextLine();
+                fileChooser = new JFileChooser();
 
-                    if (!reviewStr.matches("-?(0|[1-9]\\d*)")) {
-                        // Input is not an integer
-                        System.out.println("Illegal input.");
-                    } else {
-                        realClass = Integer.parseInt(reviewStr);
-                        if (realClass < 0 && realClass > 2){
-                            System.out.println("Not a correct choice, setting ground truth classification to UNKNOWN");
-                            realClass = 2;
-                        }
-                        rh.loadReviews(path, realClass);
-                        System.out.println("Database size: " + rh.getDatabase().size());
-                    }
-                }else{
-                    System.out.println("Not a correct file or folder: " + path);
-                    System.out.println("Try again.");
+                int returnVal = fileChooser.showOpenDialog(null);
+
+                if(returnVal == JFileChooser.APPROVE_OPTION){
+                    outText.append("Loading reviews from: " + newline + fileChooser.getSelectedFile().getAbsolutePath());
+                    System.out.print("testing rh.loadReviews()");
+
+
+                    newWindow();
+
+
+
+
+
+                }
+                else{
+                    outText.append("Selection cancelled" + newline);
                 }
 
 
 
 
-          */
-
-
-
-
             }
-
-
 
 
 
@@ -261,6 +306,7 @@ public class MovieReviewApp{
             return;
         }
 
+        /*
         try {
             // Load database if it exists.
             rh.loadDB();
@@ -268,6 +314,8 @@ public class MovieReviewApp{
             System.err.println("Error accessing the database file.");
             return;
         }
+
+         */
 
         String welcomeMessage = "\nDatabase size: " + rh.getDatabase().size() +
                 "\nChoose one of the following functions:\n\n"
@@ -277,9 +325,10 @@ public class MovieReviewApp{
         //System.out.println(welcomeMessage);
         //t.setText(welcomeMessage);
         //-------------------------------------------------------------------------------------
-        load.addActionListener(listen);
+        loadDataBase.addActionListener(listen);
         delete.addActionListener(listen);
         search.addActionListener(listen);
+        loadReview.addActionListener(listen);
 
     }
 }
