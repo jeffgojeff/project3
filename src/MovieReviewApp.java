@@ -21,8 +21,8 @@ public class MovieReviewApp implements ActionListener {
 
     public ReviewHandler rh = new ReviewHandler();
 
-    public JFrame f, f1, negPos, warningWords;
-    public JButton print, increase, newWindow, button1, button2, neg, pos, okWords, okWarning;
+    public JFrame mainFrame, f1, negPos, warningWords;
+    public JButton loadDB, loadReviews, newWindow, button1, button2, neg, pos, okWords, okWarning;
     public JRadioButton rb1, rb2, rb3, negPosOk;
     public JFileChooser fileChooser;
     public JLabel warning;
@@ -32,7 +32,7 @@ public class MovieReviewApp implements ActionListener {
         //  load words \\
         //**************\\
         negPos = new JFrame("Load Words");
-        GridLayout grid1 = new GridLayout(1,2,10,10);
+        GridLayout grid1 = new GridLayout(2,2,50,10);
 
         neg = new JButton("Select Negative Words File");
         neg.addActionListener(this);
@@ -46,15 +46,17 @@ public class MovieReviewApp implements ActionListener {
         negPos.add(okWords);
 
         negPos.setLayout(grid1);
-        negPos.setVisible(true);
+        ///change back to true
+        negPos.setVisible(false);
         negPos.setSize(500, 200);
         negPos.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         negPos.setResizable(false);
 
+
         //   warning  \\
         //*************\\
         warningWords = new JFrame("Warning");
-        GridLayout grid2 = new GridLayout(2,1,10,10);
+        GridLayout grid2 = new GridLayout(2,1,100,50);
 
         warning = new JLabel("Please select word lists before continuing");
         okWarning = new JButton("Ok");
@@ -75,28 +77,30 @@ public class MovieReviewApp implements ActionListener {
 
         //  Main Frame \\
         //**************\\
-        f = new JFrame("MovieReviewApp");
+
+        mainFrame = new JFrame("MovieReviewApp");
         GridLayout grid = new GridLayout(5,3,2,4);
 
-        print = new JButton("print tester");
-        print.addActionListener(this);
+        loadDB = new JButton("Load DataBase");
+        loadDB.addActionListener(this);
 
-        increase = new JButton("increase tester");
-        increase.addActionListener(this);
+        loadReviews = new JButton("Load Reviews");
+        loadReviews.addActionListener(this);
 
         newWindow = new JButton("new Window");
         newWindow.addActionListener(this);
 
 
-        f.add(print);
-        f.add(increase);
-        f.add(newWindow);
+        mainFrame.add(loadDB);
+        mainFrame.add(loadReviews);
+        mainFrame.add(newWindow);
 
-        f.setLayout(grid);
-        f.setVisible(false);
-        f.setSize(350,500);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setResizable(true);
+        mainFrame.setLayout(grid);
+        ///change back to false
+        mainFrame.setVisible(true);
+        mainFrame.setSize(350,500);
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.setResizable(true);
 
 
 
@@ -128,16 +132,46 @@ public class MovieReviewApp implements ActionListener {
     public void actionPerformed (ActionEvent event) {
 
 
-        if (event.getSource() == print) {
-            System.out.println("printing tester: ");
-            rh.getTester();
+        if (event.getSource() == loadDB) {
+            //fileChooser = new JFileChooser();
+            //fileChooser.setCurrentDirectory(new File("."));
+            //int returnVal = fileChooser.showOpenDialog(null);
+
+            try {
+                rh.loadDB();
+                System.out.println("loaded");
+            } catch (IOException e) {
+                System.out.println("Error Loading DataBase");
+                System.out.println("Please try again");
+                return;
+            }
         }
 
-        if (event.getSource() == increase) {
+
+
+
+
+
+
+
+
+
+
+        if (event.getSource() == loadReviews) {
             System.out.println("increasing tester:");
-            rh.increaseTester();
+            //rh.increaseTester();
 
         }
+
+
+
+
+
+
+
+
+
+
 
         if (event.getSource() == newWindow) {
             f1.setVisible(true);
@@ -177,22 +211,26 @@ public class MovieReviewApp implements ActionListener {
                     (rh.getNegWordsFilePath().contains(".txt")) && rh.getPosWordsFilePath().contains(".txt")) {
                 try {
                     rh.loadPosNegWords();
-                    System.out.println("Passed");
+                    //System.out.println("Passed");
                     negPos.dispose();
-                    f1.setVisible(true);
+                    mainFrame.setVisible(true);
                 } catch (IOException e) {
                     System.out.println("Error Loading Words");
                     System.out.println("Please try again");
+                    return;
                 }
             }
             else{
-                System.out.println("failed");
+                //System.out.println("failed");
                 warningWords.setVisible(true);
             }
         }
         if(event.getSource() == okWarning){
             warningWords.dispose();
         }
+
+
+
 
 
 
