@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.event.*;
 //import java.awt.GridLayout;
 import java.awt.*;
+import java.io.*;
 
 /**
  * Main application class. Provides functionality for interacting with the user.
@@ -20,15 +21,60 @@ public class MovieReviewApp implements ActionListener {
 
     public ReviewHandler rh = new ReviewHandler();
 
-    public JFrame f, f1;
-    public JButton print, increase, newWindow, button1, button2;
-    public JRadioButton rb1, rb2, rb3;
+    public JFrame f, f1, negPos, warningWords;
+    public JButton print, increase, newWindow, button1, button2, neg, pos, okWords, okWarning;
+    public JRadioButton rb1, rb2, rb3, negPosOk;
+    public JFileChooser fileChooser;
+    public JLabel warning;
 
 
     MovieReviewApp(){
+        //  load words \\
+        //**************\\
+        negPos = new JFrame("Load Words");
+        GridLayout grid1 = new GridLayout(1,2,10,10);
 
-        ReviewHandler rh = new ReviewHandler();
+        neg = new JButton("Select Negative Words File");
+        neg.addActionListener(this);
+        pos = new JButton("Select Positive Words File");
+        pos.addActionListener(this);
+        okWords = new JButton("Load Words");
+        okWords.addActionListener(this);
 
+        negPos.add(neg);
+        negPos.add(pos);
+        negPos.add(okWords);
+
+        negPos.setLayout(grid1);
+        negPos.setVisible(true);
+        negPos.setSize(500, 200);
+        negPos.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        negPos.setResizable(false);
+
+        //   warning  \\
+        //*************\\
+        warningWords = new JFrame("Warning");
+        GridLayout grid2 = new GridLayout(2,1,10,10);
+
+        warning = new JLabel("Please select word lists before continuing");
+        okWarning = new JButton("Ok");
+        okWarning.addActionListener(this);
+
+        warningWords.add(warning);
+        warningWords.add(okWarning);
+
+        warningWords.setLayout(grid2);
+        warningWords.setVisible(false);
+        warningWords.setSize(300, 200);
+        warningWords.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        warningWords.setResizable(false);
+
+
+
+
+
+        //  Main Frame \\
+        //**************\\
         f = new JFrame("MovieReviewApp");
         GridLayout grid = new GridLayout(5,3,2,4);
 
@@ -47,7 +93,7 @@ public class MovieReviewApp implements ActionListener {
         f.add(newWindow);
 
         f.setLayout(grid);
-        f.setVisible(true);
+        f.setVisible(false);
         f.setSize(350,500);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setResizable(true);
@@ -58,7 +104,7 @@ public class MovieReviewApp implements ActionListener {
         //New Frame
         //****************************************
         f1 = new JFrame("new frame");
-        GridLayout grid2 = new GridLayout(5,3,2,4);
+        GridLayout grid22 = new GridLayout(5,3,2,4);
 
         button1 = new JButton("print");
         button1.addActionListener(this);
@@ -67,7 +113,7 @@ public class MovieReviewApp implements ActionListener {
 
         f1.add(button1);
         f1.add(button2);
-        f1.setLayout(grid2);
+        f1.setLayout(grid22);
         f1.setSize(300,500);
         f1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         f1.setVisible(false);
@@ -79,32 +125,75 @@ public class MovieReviewApp implements ActionListener {
 
 
 
-    public void actionPerformed (ActionEvent event){
+    public void actionPerformed (ActionEvent event) {
 
 
-        if(event.getSource() == print){
+        if (event.getSource() == print) {
             System.out.println("printing tester: ");
             rh.getTester();
         }
 
-        if(event.getSource() == increase){
+        if (event.getSource() == increase) {
             System.out.println("increasing tester:");
             rh.increaseTester();
 
         }
 
-        if(event.getSource() == newWindow){
+        if (event.getSource() == newWindow) {
             f1.setVisible(true);
 
         }
-        if(event.getSource() == button1){
+        if (event.getSource() == button1) {
             System.out.println("button1: ");
             rh.getTester();
         }
-        if(event.getSource() == button2){
+        if (event.getSource() == button2) {
             System.out.println("button2");
             rh.increaseTester();
         }
+        if (event.getSource() == pos) {
+            fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(new File("."));
+            int returnVal = fileChooser.showOpenDialog(null);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                rh.setPosWordsFilePath(fileChooser.getSelectedFile().getAbsolutePath().toString());
+                System.out.println("testing filePath: " + rh.getPosWordsFilePath());
+            }
+
+        }
+        if (event.getSource() == neg) {
+            fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(new File("."));
+            int returnVal = fileChooser.showOpenDialog(null);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                rh.setNegWordsFilePath(fileChooser.getSelectedFile().getAbsolutePath().toString());
+                System.out.println("testing filePath: " + rh.getNegWordsFilePath());
+            }
+        }
+        if (event.getSource() == okWords) {
+            if ((rh.getPosWordsFilePath() != "") && (rh.getNegWordsFilePath() != "") &&
+                    (rh.getNegWordsFilePath().contains(".txt")) && rh.getPosWordsFilePath().contains(".txt")) {
+                try {
+                    rh.loadPosNegWords();
+                    System.out.println("Passed");
+                    negPos.dispose();
+                    f1.setVisible(true);
+                } catch (IOException e) {
+                    System.out.println("Error Loading Words");
+                    System.out.println("Please try again");
+                }
+            }
+            else{
+                System.out.println("failed");
+                warningWords.setVisible(true);
+            }
+        }
+        if(event.getSource() == okWarning){
+            warningWords.dispose();
+        }
+
 
 
     }
@@ -120,6 +209,7 @@ public class MovieReviewApp implements ActionListener {
     public static void main(String [] args) {
 
         new MovieReviewApp();
+
 
     }
 
