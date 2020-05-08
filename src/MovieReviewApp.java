@@ -20,13 +20,14 @@ public class MovieReviewApp implements ActionListener {
 
     public ReviewHandler rh = new ReviewHandler();
 
-    public JFrame f;
-    public JButton print, increase;
+    public JFrame f, f1;
+    public JButton print, increase, newWindow, button1, button2;
+    public JRadioButton rb1, rb2, rb3;
 
 
     MovieReviewApp(){
 
-        project3.ReviewHandler rh = new project3.ReviewHandler();
+        ReviewHandler rh = new ReviewHandler();
 
         f = new JFrame("MovieReviewApp");
         GridLayout grid = new GridLayout(5,3,2,4);
@@ -37,9 +38,13 @@ public class MovieReviewApp implements ActionListener {
         increase = new JButton("increase tester");
         increase.addActionListener(this);
 
+        newWindow = new JButton("new Window");
+        newWindow.addActionListener(this);
+
 
         f.add(print);
         f.add(increase);
+        f.add(newWindow);
 
         f.setLayout(grid);
         f.setVisible(true);
@@ -47,6 +52,25 @@ public class MovieReviewApp implements ActionListener {
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setResizable(true);
 
+
+
+
+        //New Frame
+        //****************************************
+        f1 = new JFrame("new frame");
+        GridLayout grid2 = new GridLayout(5,3,2,4);
+
+        button1 = new JButton("print");
+        button1.addActionListener(this);
+        button2 = new JButton("increase");
+        button2.addActionListener(this);
+
+        f1.add(button1);
+        f1.add(button2);
+        f1.setLayout(grid2);
+        f1.setSize(300,500);
+        f1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        f1.setVisible(false);
 
 
 
@@ -67,6 +91,19 @@ public class MovieReviewApp implements ActionListener {
             System.out.println("increasing tester:");
             rh.increaseTester();
 
+        }
+
+        if(event.getSource() == newWindow){
+            f1.setVisible(true);
+
+        }
+        if(event.getSource() == button1){
+            System.out.println("button1: ");
+            rh.getTester();
+        }
+        if(event.getSource() == button2){
+            System.out.println("button2");
+            rh.increaseTester();
         }
 
 
