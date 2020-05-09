@@ -57,7 +57,7 @@ public class MovieReviewApp implements ActionListener {
 
         negPos.setLayout(grid1);
         ///change back to true
-        negPos.setVisible(false);
+        negPos.setVisible(true);
         negPos.setSize(500, 200);
         negPos.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         negPos.setResizable(false);
@@ -124,7 +124,7 @@ public class MovieReviewApp implements ActionListener {
 
         mainFrame.setLayout(grid);
         ///change back to false
-        mainFrame.setVisible(true);
+        mainFrame.setVisible(false);
         mainFrame.setSize(800,800);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setResizable(true);
