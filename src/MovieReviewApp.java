@@ -21,11 +21,11 @@ public class MovieReviewApp implements ActionListener {
 
     public ReviewHandler rh = new ReviewHandler();
 
-    public JFrame mainFrame, reviewFrame, negPos, warningWords;
-    public JButton loadDB, loadReviews, newWindow,neg, pos, okWords, okWarning, okReviews, selectReviews;
-    public JRadioButton rb1, rb2, rb3, negPosOk;
+    public JFrame mainFrame, reviewFrame, negPos, warningWords, warningFrame;
+    public JButton loadDB, loadReviews, newWindow,neg, pos, okWords, okWarning, okReviews, selectReviews, okWarnReviews;
+    public JRadioButton rb1, rb2, rb3;
     public JFileChooser fileChooser;
-    public JLabel warning, reviewsClass, reviewsInfo;
+    public JLabel warning, reviewsClass, reviewsInfo, warningReviews;
     public JPanel reviewsBG;
     public JTextField reviewsPath;
 
@@ -50,7 +50,7 @@ public class MovieReviewApp implements ActionListener {
 
         negPos.setLayout(grid1);
         ///change back to true
-        negPos.setVisible(false);
+        negPos.setVisible(true);
         negPos.setSize(500, 200);
         negPos.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         negPos.setResizable(false);
@@ -100,7 +100,7 @@ public class MovieReviewApp implements ActionListener {
 
         mainFrame.setLayout(grid);
         ///change back to false
-        mainFrame.setVisible(true);
+        mainFrame.setVisible(false);
         mainFrame.setSize(350,500);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setResizable(true);
@@ -151,9 +151,34 @@ public class MovieReviewApp implements ActionListener {
         reviewFrame.add(okReviews);
 
         reviewFrame.setLayout(gridReview);
-        reviewFrame.setSize(400,300);
+        reviewFrame.setSize(600,300);
         reviewFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         reviewFrame.setVisible(false);
+
+
+
+
+
+         //  loadReviews Warning \\
+        //***********************\\
+        warningFrame = new JFrame("Warning");
+        GridLayout gridReviews = new GridLayout(2,1,100,50);
+
+        warningReviews = new JLabel("Please select real class and enter a correct destination before continuing");
+        warningReviews.setHorizontalAlignment(JLabel.CENTER);
+        okWarnReviews = new JButton("Ok");
+        okWarnReviews.addActionListener(this);
+
+        warningFrame.add(warningReviews);
+        warningFrame.add(okWarnReviews);
+
+        warningFrame.setLayout(gridReviews);
+        warningFrame.setVisible(false);
+        warningFrame.setSize(300, 200);
+        warningFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        warningFrame.setResizable(false);
+
+
 
 
 
@@ -202,13 +227,29 @@ public class MovieReviewApp implements ActionListener {
             if(rb1.isSelected()){ realClass = 0; }
             if(rb2.isSelected()){ realClass = 1; }
             if(rb3.isSelected()){ realClass = 2; }
-            if(realClass == -1){
-                System.out.println("realClass: -1");
-                return;
+            if(realClass == -1 || reviewsPath.getText().isEmpty()){
+                System.out.println("box box: " + reviewsPath.getText());
+                warningFrame.setVisible(true);
+            }
+
+            if(realClass < 2 && realClass > -1 && !reviewsPath.getText().isEmpty()){
+                try {
+                    rh.loadReviews(reviewsPath.getText(), realClass);
+                    reviewFrame.dispose();
+                }
+                catch(NullPointerException e){
+                    warningFrame.setVisible(true);
+                    System.out.println("error loading reviews");
+                    return;
+                }
             }
 
 
 
+
+        }
+        if(event.getSource() == okWarnReviews){
+            warningFrame.dispose();
         }
 
 
