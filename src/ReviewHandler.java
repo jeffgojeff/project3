@@ -13,6 +13,12 @@ import java.util.Scanner;
 
 public class ReviewHandler extends AbstractReviewHandler {
 
+    private int tester = 0;
+
+    public void getTester() { System.out.println("tester: " + tester); }
+    public void increaseTester() { tester++; }
+
+
     /**
      * Loads reviews from a given path. If the given path is a .txt file, then
      * a single review is loaded. Otherwise, if the path is a folder, all reviews
@@ -285,4 +291,6 @@ public class ReviewHandler extends AbstractReviewHandler {
         }
 
     }
+
+
 }

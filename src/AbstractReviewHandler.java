@@ -24,6 +24,8 @@ public abstract class AbstractReviewHandler {
         database = new HashMap<>();
         posWords = new HashSet<String>();
         negWords = new HashSet<String>();
+        posFilePath = "";
+        negFilePath = "";
     }
 
     /**
@@ -64,6 +66,15 @@ public abstract class AbstractReviewHandler {
      */
     public HashSet<String> getNegWords() {
         return negWords;
+    }
+
+    public String getPosWordsFilePath() { return posFilePath; }
+    public String getNegWordsFilePath() { return negFilePath; }
+    public void setPosWordsFilePath(String pos){
+        posFilePath = pos;
+    }
+    public void setNegWordsFilePath(String neg){
+        negFilePath = neg;
     }
     
     
@@ -159,7 +170,11 @@ public abstract class AbstractReviewHandler {
      * @param negFilePath path to file containing negative words
      * @throws IOException if file is not found
      */
-    public void loadPosNegWords(String posFilePath, String negFilePath) throws IOException {
+
+    //*************************************
+    //**************************************
+    //**************************************
+    public void loadPosNegWords() throws IOException {
         readInWords(posFilePath, posWords);
         readInWords(negFilePath, negWords);
     }
@@ -209,6 +224,8 @@ public abstract class AbstractReviewHandler {
     
     private HashSet<String> posWords;
     private HashSet<String> negWords;
+    private String posFilePath;
+    private String negFilePath;
     
     /**
      * The file name of where the database is going to be saved.
