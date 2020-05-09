@@ -7,6 +7,7 @@ import java.awt.event.*;
 //import java.awt.GridLayout;
 import java.awt.*;
 import java.io.*;
+import java.util.List;
 
 /**
  * Main application class. Provides functionality for interacting with the user.
@@ -21,13 +22,16 @@ public class MovieReviewApp implements ActionListener {
 
     public ReviewHandler rh = new ReviewHandler();
 
-    public JFrame mainFrame, reviewFrame, negPos, warningWords, warningFrame;
-    public JButton loadDB, loadReviews, newWindow,neg, pos, okWords, okWarning, okReviews, selectReviews, okWarnReviews;
+    public JFrame mainFrame, reviewFrame, negPos, warningWords, warningFrame, searchIdFrame, searchSubFrame;
+    public JButton loadDB, loadReviews, neg, pos, okWords,
+            okWarning, okReviews, selectReviews, okWarnReviews,
+            searchReview, searchId, searchClose, searchSub, searchSubClose, searchSubReview;
     public JRadioButton rb1, rb2, rb3;
     public JFileChooser fileChooser;
-    public JLabel warning, reviewsClass, reviewsInfo, warningReviews;
+    public JLabel warning, reviewsClass, reviewsInfo, warningReviews, searchLabel, searchSubLabel;
     public JPanel reviewsBG;
-    public JTextField reviewsPath;
+    public JTextField reviewsPath, searchIdText, searchSubText;
+    public JTextArea mainArea, searchIdArea, searchSubArea;
 
 
 
@@ -50,7 +54,7 @@ public class MovieReviewApp implements ActionListener {
 
         negPos.setLayout(grid1);
         ///change back to true
-        negPos.setVisible(true);
+        negPos.setVisible(false);
         negPos.setSize(500, 200);
         negPos.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         negPos.setResizable(false);
@@ -90,18 +94,27 @@ public class MovieReviewApp implements ActionListener {
         loadReviews = new JButton("Load Reviews");
         loadReviews.addActionListener(this);
 
-        newWindow = new JButton("new Window");
-        newWindow.addActionListener(this);
+        searchReview = new JButton("search id");
+        searchReview.addActionListener(this);
+
+        searchSubReview = new JButton("search sub");
+        searchSubReview.addActionListener(this);
+
+
+        mainArea = new JTextArea();
+        mainArea.setEditable(false);
 
 
         mainFrame.add(loadDB);
         mainFrame.add(loadReviews);
-        mainFrame.add(newWindow);
+        mainFrame.add(searchReview);
+        mainFrame.add(searchSubReview);
+        mainFrame.add(mainArea);
 
         mainFrame.setLayout(grid);
         ///change back to false
-        mainFrame.setVisible(false);
-        mainFrame.setSize(350,500);
+        mainFrame.setVisible(true);
+        mainFrame.setSize(800,800);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setResizable(true);
 
@@ -180,6 +193,67 @@ public class MovieReviewApp implements ActionListener {
 
 
 
+         //  search review  \\
+        //*******************\
+        searchIdFrame = new JFrame("Search by ID");
+        GridLayout gridSearch = new GridLayout(3,2);
+
+        searchId = new JButton("Search");
+        searchId.addActionListener(this);
+        searchClose = new JButton("close");
+        searchClose.addActionListener(this);
+
+        searchIdText = new JTextField();
+        searchIdArea = new JTextArea();
+        searchLabel = new JLabel("enter id");
+
+        searchIdFrame.add(searchLabel);
+        searchIdFrame.add(searchIdText);
+        searchIdFrame.add(searchId);
+        searchIdFrame.add(searchIdArea);
+        searchIdFrame.add(searchClose);
+
+        searchIdFrame.setLayout(gridSearch);
+        searchIdFrame.setVisible(false);
+        searchIdFrame.setSize(300, 200);
+        searchIdFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        searchIdFrame.setResizable(true);
+
+
+         //  search review substring  \\
+        //*****************************\\
+        searchSubFrame = new JFrame("Search by SubString");
+        GridLayout gridSub = new GridLayout(3,2);
+
+        searchSub = new JButton("Search");
+        searchSub.addActionListener(this);
+        searchSubClose = new JButton("Close");
+        searchSubClose.addActionListener(this);
+
+        searchSubText = new JTextField();
+        searchSubArea = new JTextArea();
+        searchSubLabel = new JLabel("enter substring");
+
+        searchSubFrame.add(searchSubLabel);
+        searchSubFrame.add(searchSubText);
+        searchSubFrame.add(searchSub);
+        searchSubFrame.add(searchSubArea);
+        searchSubFrame.add(searchSubClose);
+
+        searchSubFrame.setLayout(gridSub);
+        searchSubFrame.setVisible(false);
+        searchSubFrame.setSize(300, 200);
+        searchSubFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        searchSubFrame.setResizable(true);
+
+
+
+
+
+
+
+
+
 
 
 
@@ -192,10 +266,6 @@ public class MovieReviewApp implements ActionListener {
 
 
         if (event.getSource() == loadDB) {
-            //fileChooser = new JFileChooser();
-            //fileChooser.setCurrentDirectory(new File("."));
-            //int returnVal = fileChooser.showOpenDialog(null);
-
             try {
                 rh.loadDB();
                 System.out.println("loaded");
@@ -205,21 +275,8 @@ public class MovieReviewApp implements ActionListener {
                 return;
             }
         }
-
-
-
-
-
-
-
-
-
-
-
         if (event.getSource() == loadReviews) {
-
             reviewFrame.setVisible(true);
-
         }
         if(event.getSource() == okReviews){
             int realClass = -1;
@@ -231,7 +288,6 @@ public class MovieReviewApp implements ActionListener {
                 System.out.println("box box: " + reviewsPath.getText());
                 warningFrame.setVisible(true);
             }
-
             if(realClass < 2 && realClass > -1 && !reviewsPath.getText().isEmpty()){
                 try {
                     rh.loadReviews(reviewsPath.getText(), realClass);
@@ -243,25 +299,10 @@ public class MovieReviewApp implements ActionListener {
                     return;
                 }
             }
-
-
-
-
         }
         if(event.getSource() == okWarnReviews){
             warningFrame.dispose();
         }
-
-
-
-
-
-
-
-
-
-
-
         if (event.getSource() == pos) {
             fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(new File("."));
@@ -271,7 +312,6 @@ public class MovieReviewApp implements ActionListener {
                 rh.setPosWordsFilePath(fileChooser.getSelectedFile().getAbsolutePath().toString());
                 System.out.println("testing filePath: " + rh.getPosWordsFilePath());
             }
-
         }
         if (event.getSource() == neg) {
             fileChooser = new JFileChooser();
@@ -305,6 +345,51 @@ public class MovieReviewApp implements ActionListener {
         if(event.getSource() == okWarning){
             warningWords.dispose();
         }
+
+
+
+        if(event.getSource() == searchReview){
+            searchIdFrame.setVisible(true);
+        }
+        if(event.getSource() == searchId){
+            int temp = Integer.parseInt(searchIdText.getText());
+            MovieReview mr = rh.searchById(temp);
+            searchIdArea.setText("");
+            searchIdArea.append("Review ID: " + mr.getId() + "\n" +
+                                "Real Score: " + mr.getRealScore() + "\n" +
+                                "Predicted Score: " + mr.getPredictedScore() + "\n" +
+                                "Text: " + mr.getText().substring(0,20) + "...");
+
+
+        }
+        if(event.getSource() == searchClose){
+            searchIdFrame.dispose();
+        }
+
+
+        if(event.getSource() == searchSubReview){
+            searchSubFrame.setVisible(true);
+        }
+        if(event.getSource() == searchSub){
+            String temp = searchSubText.getText();
+            List<MovieReview> reviewList = rh.searchBySubstring(temp);
+            for( MovieReview mr : reviewList ) {
+                searchSubArea.setText("");
+                searchSubArea.append("Review ID: " + mr.getId() + "\n" +
+                        "Real Score: " + mr.getRealScore() + "\n" +
+                        "Predicted Score: " + mr.getPredictedScore() + "\n" +
+                        "Text: " + mr.getText().substring(0, 20) + "...");
+            }
+
+        }
+        if(event.getSource() == searchSubClose){
+            searchSubFrame.dispose();
+        }
+
+
+
+
+
 
 
 
