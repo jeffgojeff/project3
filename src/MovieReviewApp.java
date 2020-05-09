@@ -21,11 +21,14 @@ public class MovieReviewApp implements ActionListener {
 
     public ReviewHandler rh = new ReviewHandler();
 
-    public JFrame mainFrame, f1, negPos, warningWords;
-    public JButton loadDB, loadReviews, newWindow, button1, button2, neg, pos, okWords, okWarning;
+    public JFrame mainFrame, reviewFrame, negPos, warningWords;
+    public JButton loadDB, loadReviews, newWindow,neg, pos, okWords, okWarning, okReviews, selectReviews;
     public JRadioButton rb1, rb2, rb3, negPosOk;
     public JFileChooser fileChooser;
-    public JLabel warning;
+    public JLabel warning, reviewsClass, reviewsInfo;
+    public JPanel reviewsBG;
+    public JTextField reviewsPath;
+
 
 
     MovieReviewApp(){
@@ -53,8 +56,8 @@ public class MovieReviewApp implements ActionListener {
         negPos.setResizable(false);
 
 
-        //   warning  \\
-        //*************\\
+        //   warning   \\
+        //**************\\
         warningWords = new JFrame("Warning");
         GridLayout grid2 = new GridLayout(2,1,100,50);
 
@@ -105,22 +108,52 @@ public class MovieReviewApp implements ActionListener {
 
 
 
-        //New Frame
-        //****************************************
-        f1 = new JFrame("new frame");
-        GridLayout grid22 = new GridLayout(5,3,2,4);
+        // load reviews class selection \\
+        //*******************************\\
+        reviewFrame = new JFrame("Load Reviews");
+        GridLayout gridReview = new GridLayout(4,2,2,4);
 
-        button1 = new JButton("print");
-        button1.addActionListener(this);
-        button2 = new JButton("increase");
-        button2.addActionListener(this);
+        reviewsClass = new JLabel("Please select the real class for the reviews");
+        reviewsClass.setHorizontalAlignment(JLabel.CENTER);
 
-        f1.add(button1);
-        f1.add(button2);
-        f1.setLayout(grid22);
-        f1.setSize(300,500);
-        f1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        f1.setVisible(false);
+        reviewsBG = new JPanel();
+        ButtonGroup group = new ButtonGroup();
+
+        rb1 = new JRadioButton("Negative");
+        rb1.addActionListener(this);
+        rb2 = new JRadioButton("Positive");
+        rb2.addActionListener(this);
+        rb3 = new JRadioButton("Unknown");
+        rb3.addActionListener(this);
+
+        okReviews = new JButton("Load Selected Reviews");
+        okReviews.addActionListener(this);
+        selectReviews = new JButton("Open File");
+        selectReviews.addActionListener(this);
+
+        group.add(rb1);
+        group.add(rb2);
+        group.add(rb3);
+
+        reviewsPath = new JTextField();
+        reviewsInfo = new JLabel("Enter reviews path: ");
+
+
+
+        reviewsBG.add(rb1);
+        reviewsBG.add(rb2);
+        reviewsBG.add(rb3);
+
+        reviewFrame.add(reviewsClass);
+        reviewFrame.add(reviewsBG);
+        reviewFrame.add(reviewsInfo);
+        reviewFrame.add(reviewsPath);
+        reviewFrame.add(okReviews);
+
+        reviewFrame.setLayout(gridReview);
+        reviewFrame.setSize(400,300);
+        reviewFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        reviewFrame.setVisible(false);
 
 
 
@@ -130,6 +163,7 @@ public class MovieReviewApp implements ActionListener {
 
 
     public void actionPerformed (ActionEvent event) {
+
 
 
         if (event.getSource() == loadDB) {
@@ -158,8 +192,22 @@ public class MovieReviewApp implements ActionListener {
 
 
         if (event.getSource() == loadReviews) {
-            System.out.println("increasing tester:");
-            //rh.increaseTester();
+
+            reviewFrame.setVisible(true);
+
+        }
+        if(event.getSource() == okReviews){
+            int realClass = -1;
+
+            if(rb1.isSelected()){ realClass = 0; }
+            if(rb2.isSelected()){ realClass = 1; }
+            if(rb3.isSelected()){ realClass = 2; }
+            if(realClass == -1){
+                System.out.println("realClass: -1");
+                return;
+            }
+
+
 
         }
 
@@ -173,18 +221,6 @@ public class MovieReviewApp implements ActionListener {
 
 
 
-        if (event.getSource() == newWindow) {
-            f1.setVisible(true);
-
-        }
-        if (event.getSource() == button1) {
-            System.out.println("button1: ");
-            rh.getTester();
-        }
-        if (event.getSource() == button2) {
-            System.out.println("button2");
-            rh.increaseTester();
-        }
         if (event.getSource() == pos) {
             fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(new File("."));
