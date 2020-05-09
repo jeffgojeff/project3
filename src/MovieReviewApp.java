@@ -22,15 +22,18 @@ public class MovieReviewApp implements ActionListener {
 
     public ReviewHandler rh = new ReviewHandler();
 
-    public JFrame mainFrame, reviewFrame, negPos, warningWords, warningFrame, searchIdFrame, searchSubFrame;
+    public JFrame mainFrame, reviewFrame, negPos, warningWords, warningFrame,
+            searchIdFrame, searchSubFrame, deleteFrame;
     public JButton loadDB, loadReviews, neg, pos, okWords,
             okWarning, okReviews, selectReviews, okWarnReviews,
-            searchReview, searchId, searchClose, searchSub, searchSubClose, searchSubReview;
+            searchReview, searchId, searchClose, searchSub, searchSubClose,
+            searchSubReview, deleteReview, deleteReviewButton, deleteReviewClose, saveDB;
     public JRadioButton rb1, rb2, rb3;
     public JFileChooser fileChooser;
-    public JLabel warning, reviewsClass, reviewsInfo, warningReviews, searchLabel, searchSubLabel;
+    public JLabel warning, reviewsClass, reviewsInfo, warningReviews, searchLabel, searchSubLabel,
+                deleteLabel;
     public JPanel reviewsBG;
-    public JTextField reviewsPath, searchIdText, searchSubText;
+    public JTextField reviewsPath, searchIdText, searchSubText, deleteText;
     public JTextArea mainArea, searchIdArea, searchSubArea;
 
 
@@ -91,6 +94,9 @@ public class MovieReviewApp implements ActionListener {
         loadDB = new JButton("Load DataBase");
         loadDB.addActionListener(this);
 
+        saveDB = new JButton("Save DataBase");
+        saveDB.addActionListener(this);
+
         loadReviews = new JButton("Load Reviews");
         loadReviews.addActionListener(this);
 
@@ -100,15 +106,20 @@ public class MovieReviewApp implements ActionListener {
         searchSubReview = new JButton("search sub");
         searchSubReview.addActionListener(this);
 
+        deleteReview = new JButton("delete Review");
+        deleteReview.addActionListener(this);
+
 
         mainArea = new JTextArea();
         mainArea.setEditable(false);
 
 
         mainFrame.add(loadDB);
+        mainFrame.add(saveDB);
         mainFrame.add(loadReviews);
         mainFrame.add(searchReview);
         mainFrame.add(searchSubReview);
+        mainFrame.add(deleteReview);
         mainFrame.add(mainArea);
 
         mainFrame.setLayout(grid);
@@ -247,7 +258,28 @@ public class MovieReviewApp implements ActionListener {
         searchSubFrame.setResizable(true);
 
 
+         //  delete review  \\
+        //*******************\\
+        deleteFrame = new JFrame("delete review");
+        GridLayout gridDelete = new GridLayout(3,2);
 
+        deleteReviewButton = new JButton("delete review");
+        deleteReviewButton.addActionListener(this);
+        deleteReviewClose = new JButton("close");
+        deleteReviewClose.addActionListener(this);
+        deleteText = new JTextField();
+        deleteLabel = new JLabel("enter id to be deleted");
+
+        deleteFrame.add(deleteLabel);
+        deleteFrame.add(deleteText);
+        deleteFrame.add(deleteReviewButton);
+        deleteFrame.add(deleteReviewClose);
+
+        deleteFrame.setLayout(gridDelete);
+        deleteFrame.setVisible(false);
+        deleteFrame.setSize(300, 200);
+        deleteFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        deleteFrame.setResizable(true);
 
 
 
@@ -275,6 +307,17 @@ public class MovieReviewApp implements ActionListener {
                 return;
             }
         }
+        if(event.getSource()== saveDB){
+            try {
+                rh.saveDB();
+            }
+            catch(IOException e){
+                System.out.println("failed to save database");
+                return;
+            }
+        }
+
+
         if (event.getSource() == loadReviews) {
             reviewFrame.setVisible(true);
         }
@@ -385,6 +428,21 @@ public class MovieReviewApp implements ActionListener {
         if(event.getSource() == searchSubClose){
             searchSubFrame.dispose();
         }
+
+
+        if(event.getSource() == deleteReview){
+            deleteFrame.setVisible(true);
+        }
+        if(event.getSource() == deleteReviewButton){
+            int temp = Integer.parseInt(deleteText.getText());
+            rh.deleteReview(temp);
+            deleteText.setText("");
+
+        }
+        if(event.getSource() == deleteReviewClose){
+            deleteFrame.dispose();
+        }
+
 
 
 
