@@ -13,10 +13,6 @@ import java.util.Scanner;
 
 public class ReviewHandler extends AbstractReviewHandler {
 
-    private int tester = 0;
-
-    public void getTester() { System.out.println("tester: " + tester); }
-    public void increaseTester() { tester++; }
 
 
     /**
@@ -74,7 +70,6 @@ public class ReviewHandler extends AbstractReviewHandler {
                         // Only import txt files
                         // Import review
                         MovieReview review = readReview(filePath + fileSeparatorChar + fileName, realClass);
-                        
                         // Classify review
                         ReviewScore rs = classifyReview(review);
                         review.setPredictedScore(rs);

@@ -17,8 +17,6 @@ import java.util.List;
  */
 public class MovieReviewApp implements ActionListener {
 
-    // Used to read from System's standard input
-    static final Scanner CONSOLE_INPUT = new Scanner(System.in);
 
     public ReviewHandler rh = new ReviewHandler();
 
@@ -26,16 +24,18 @@ public class MovieReviewApp implements ActionListener {
             searchIdFrame, searchSubFrame, deleteFrame;
     public JButton loadDB, loadReviews, neg, pos, okWords,
             okWarning, okReviews, selectReviews, okWarnReviews,
-            searchReview, searchId, searchClose, searchSub, searchSubClose,
-            searchSubReview, deleteReview, deleteReviewButton, deleteReviewClose, saveDB;
+            searchReview, searchId, searchClose, searchSub, searchSubReview,
+            deleteReview, deleteReviewButton, deleteReviewClose, saveDB,
+            subClose;
     public JRadioButton rb1, rb2, rb3;
     public JFileChooser fileChooser;
-    public JLabel warning, reviewsClass, reviewsInfo, warningReviews, searchLabel, searchSubLabel,
-                deleteLabel, mainLabel;
-    public JPanel reviewsBG, mainPanel;
-    public JTextField reviewsPath, searchIdText, searchSubText, deleteText;
-    public JTextArea mainArea, searchIdArea, searchSubArea;
+    public JLabel warning, reviewsClass, reviewsInfo, warningReviews, searchLabel, subLabelAgain,
+                deleteLabel, mainLabel, accuracy, totalReviews, searchLabelAgain, subLabel, useless;
+    public JPanel reviewsBG, subPanel, accPanel, searchPanel, loadPanel, bottomPanel;
+    public JTextField reviewsPath, searchSubText, deleteText, searchIdText;
+    public JTextArea searchIdArea, searchSubArea, deleteArea;
     public JTable mainTable;
+    public JScrollPane mainTablePane, idPane, subPane, deletePane;
 
 
 
@@ -73,7 +73,7 @@ public class MovieReviewApp implements ActionListener {
 
 
         ///change back to true
-        negPos.setVisible(false);
+        negPos.setVisible(true);
         negPos.setSize(500, 200);
         negPos.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         negPos.setResizable(false);
@@ -112,91 +112,116 @@ public class MovieReviewApp implements ActionListener {
 
         mainFrame = new JFrame("MovieReviewApp");
         GridBagLayout grid = new GridBagLayout();
-        GridBagConstraints c = new GridBagConstraints();
         mainFrame.setLayout(grid);
-        c.insets = new Insets(2,2,2,2);
-        c.anchor = GridBagConstraints.CENTER;
+        GridBagConstraints c = new GridBagConstraints();
 
-        mainLabel = new JLabel("Movie Review App");
-        //Font labelFont = label.getFont();
-        mainLabel.setFont(new Font(mainLabel.getFont().getName(), Font.BOLD, 26));
+        c.insets = new Insets(10,50,10,10);
         c.gridy = 0;
-        c.gridx = 0;
+        mainLabel = new JLabel("Movie Review App");
+        mainLabel.setFont(new Font(mainLabel.getFont().getName(), Font.BOLD, 26));
         mainFrame.add(mainLabel, c);
 
-        c.fill = GridBagConstraints.HORIZONTAL;
+        accPanel = new JPanel();
+        accPanel.setLayout(new FlowLayout());
 
-        mainPanel = new JPanel();
-        mainPanel.setLayout(grid);
+        accuracy = new JLabel("Accuracy: ");
+        totalReviews = new JLabel("Database Size: ");
 
+        accPanel.add(accuracy);
+        accPanel.add(totalReviews);
+
+        c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 1;
-        c.ipadx = 15;
-        c.ipady = 50;
-        loadDB = new JButton("Load DataBase");
-        loadDB.addActionListener(this);
-        mainPanel.add(loadDB, c);
+        c.insets = new Insets(10,50,10,10);
+        mainFrame.add(accPanel,c);
 
-        c.gridx = 1;
-        c.gridy = 1;
-        saveDB = new JButton("Save DataBase");
-        saveDB.addActionListener(this);
-        mainPanel.add(saveDB, c);
+        Object [][]data = new Object[2000][4];
+        String[] columnNames = { "ID", "Predicted", "Real Score", "FilePath" };
 
+        mainTable = new JTable(data, columnNames);
+        mainTable.setEnabled(true);
+        mainTablePane = new JScrollPane(mainTable);
+
+
+        c = new GridBagConstraints();
+        c.insets = new Insets(1,10,10,10);
         c.gridx = 0;
         c.gridy = 2;
+        c.gridwidth = 4;
+        mainFrame.add(mainTable.getTableHeader(), c);
+
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 3;
+        c.insets = new Insets(10,10,10,10);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridwidth = 4;
+        mainFrame.add(mainTablePane, c);
+
+
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 4;
+        c.insets = new Insets(10,50,10,10);
+
+        bottomPanel = new JPanel();
+        bottomPanel.setLayout(new FlowLayout());
+
+        useless = new JLabel("");
+        bottomPanel.add(useless);
+        mainFrame.add(bottomPanel, c);
+
+
+
+        searchPanel = new JPanel();
+        searchPanel.setLayout(new GridLayout(1,3));
+
+        searchReview = new JButton("Search ID");
+        searchReview.addActionListener(this);
+        searchSubReview = new JButton("Search Sub");
+        searchSubReview.addActionListener(this);
+        deleteReview = new JButton("Delete Review");
+        deleteReview.addActionListener(this);
+
+        searchPanel.add(searchReview);
+        searchPanel.add(searchSubReview);
+        searchPanel.add(deleteReview);
+
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 5;
+        c.insets = new Insets(10,50,10,10);
+        mainFrame.add(searchPanel, c);
+
+
+
+        loadPanel = new JPanel();
+        loadPanel.setLayout(new GridLayout(1,3));
+
         loadReviews = new JButton("Load Reviews");
         loadReviews.addActionListener(this);
-        mainPanel.add(loadReviews,c);
+        loadDB = new JButton("Load DataBase");
+        loadDB.addActionListener(this);
+        saveDB = new JButton("Save DataBase");
+        saveDB.addActionListener(this);
 
-        c.gridx = 1;
-        c.gridy = 2;
-        searchReview = new JButton("search id");
-        searchReview.addActionListener(this);
-        mainPanel.add(searchReview, c);
+        loadPanel.add(loadReviews);
+        loadPanel.add(loadDB);
+        loadPanel.add(saveDB);
 
+        c = new GridBagConstraints();
         c.gridx = 0;
-        c.gridy = 3;
-        searchSubReview = new JButton("search sub");
-        searchSubReview.addActionListener(this);
-        mainPanel.add(searchSubReview, c);
-
-        c.gridx = 1;
-        c.gridy = 3;
-        deleteReview = new JButton("delete Review");
-        deleteReview.addActionListener(this);
-        mainPanel.add(deleteReview, c);
-
-        c.gridx = 0;
-        c.gridy = 3;
-        mainFrame.add(mainPanel, c);
-
-
-        /*
-        mainArea = new JTextArea();
-        mainArea.setEditable(false);
-         */
-        String[] columnNames = { "Id", "something", "something" };
-        String[][] data = {
-                { "Kundan Kumar Jha", "4031", "CSE" },
-                { "Anand Jha", "6014", "IT" }
-        };
-        mainTable = new JTable(data, columnNames);
-
-        //c.gridx = 0;
-        c.gridy = 4;
-        c.ipadx = 800;
-        c.ipady = 300;
-
-        mainFrame.add(mainTable, c);
+        c.gridy = 6;
+        c.insets = new Insets(10,50,10,10);
+        mainFrame.add(loadPanel, c);
 
 
         ///change back to false
         mainFrame.setVisible(false);
-        mainFrame.setSize(800,800);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setResizable(true);
-
+        mainFrame.pack();
 
 
 
@@ -269,7 +294,8 @@ public class MovieReviewApp implements ActionListener {
 
         reviewFrame.setSize(600,300);
         reviewFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        reviewFrame.setVisible(true);
+        reviewFrame.setVisible(false);
+
 
 
 
@@ -301,115 +327,192 @@ public class MovieReviewApp implements ActionListener {
 
 
 
-         //  search review  \\
-        //*******************\
+         // search review Id \\
+        //********************\\
         searchIdFrame = new JFrame("Search by ID");
         GridBagLayout gridSearch = new GridBagLayout();
         searchIdFrame.setLayout(gridSearch);
-        GridBagConstraints con = new GridBagConstraints();
-        //con.fill = GridBagConstraints.HORIZONTAL;
-        //g.anchor = GridBagConstraints.CENTER;
 
 
-
-        con.gridx=0;
-        con.gridy=0;
+        c = new GridBagConstraints();
+        c.gridx=0;
+        c.gridy=0;
+        c.insets = new Insets(10,10,10,10);
         searchLabel = new JLabel("Enter ID:");
-        searchIdFrame.add(searchLabel, con);
+        searchIdFrame.add(searchLabel, c);
 
-        con.gridx=1;
-        con.gridy=0;
-        con.ipadx=100;
-        searchIdText = new JTextField();
-        searchIdFrame.add(searchIdText, con);
+        c = new GridBagConstraints();
+        c.gridx=1;
+        c.gridy=0;
+        c.insets = new Insets(10,10,10,10);
+        searchIdText = new JTextField(15);
+        searchIdFrame.add(searchIdText, c);
 
-
-        con.gridx=0;
-        con.gridy=1;
-        con.ipadx=300;
-        con.ipady=300;
-        con.gridwidth=2;
-        searchIdArea = new JTextArea();
+        c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx=0;
+        c.gridy=1;
+        c.gridwidth = 2;
+        c.insets = new Insets(10,10,10,10);
+        searchIdArea = new JTextArea(10,15);
+        idPane = new JScrollPane(searchIdArea);
         searchIdArea.setEditable(false);
-        searchIdFrame.add(searchIdArea, con);
+        searchIdFrame.add(idPane, c);
 
-        con.gridx=0;
-        con.gridy=2;
-        con.ipadx=0;
-        con.ipady=0;
+        c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.CENTER;
+        c.gridx=0;
+        c.gridy=2;
+        c.insets = new Insets(10,10,10,10);
+        searchLabelAgain = new JLabel("");
+        //searchIdFrame.add(searchLabelAgain, c);
+
+        c = new GridBagConstraints();
+        c.gridx=0;
+        c.gridy=3;
+        c.insets = new Insets(10,10,10,10);
         searchId = new JButton("Search");
         searchId.addActionListener(this);
-        searchIdFrame.add(searchId, con);
+        searchIdFrame.add(searchId, c);
 
-        con.gridx=1;
-        con.gridy=2;
+        c = new GridBagConstraints();
+        //c.anchor = GridBagConstraints.CENTER;
+        c.gridx=1;
+        c.gridy=3;
+        c.insets = new Insets(10,10,10,10);
         searchClose = new JButton("Close");
         searchClose.addActionListener(this);
-        searchIdFrame.add(searchClose, con);
+        searchIdFrame.add(searchClose, c);
 
 
-        searchIdFrame.setVisible(true);
-        searchIdFrame.setSize(600, 500);
+        searchIdFrame.setVisible(false);
         searchIdFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         searchIdFrame.setResizable(true);
+        searchIdFrame.pack();
 
 
          //  search review substring  \\
         //*****************************\\
-        searchSubFrame = new JFrame("Search by SubString");
-        GridLayout gridSub = new GridLayout(3,2);
+        searchSubFrame = new JFrame("Search by Substring");
+        subPanel = new JPanel();
+        GridBagLayout gridSub = new GridBagLayout();
+        searchSubFrame.setLayout(gridSub);
 
+
+        c = new GridBagConstraints();
+        c.gridx=0;
+        c.gridy=0;
+        c.insets = new Insets(10,10,10,10);
+        subLabel = new JLabel("Enter string:");
+        searchSubFrame.add(subLabel, c);
+
+        c = new GridBagConstraints();
+        c.gridx=1;
+        c.gridy=0;
+        c.gridwidth = 2;
+        c.insets = new Insets(10,10,10,10);
+        searchSubText = new JTextField(15);
+        searchSubFrame.add(searchSubText, c);
+
+        c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        //c.fill = GridBagConstraints.VERTICAL;
+        c.gridx=0;
+        c.gridy=1;
+        c.gridwidth = 4;
+        c.insets = new Insets(10,10,10,10);
+        searchSubArea = new JTextArea(10,15);
+        subPane = new JScrollPane(searchSubArea);
+        searchSubArea.setEditable(false);
+        searchSubFrame.add(subPane, c);
+
+        c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.CENTER;
+        c.gridx=0;
+        c.gridy=2;
+        //c.insets = new Insets(10,10,10,10);
+        subLabelAgain = new JLabel("");
+        searchSubFrame.add(subLabelAgain, c);
+
+        c = new GridBagConstraints();
+        c.gridx=0;
+        c.gridy=3;
+        c.insets = new Insets(10,10,10,10);
         searchSub = new JButton("Search");
         searchSub.addActionListener(this);
-        searchSubClose = new JButton("Close");
-        searchSubClose.addActionListener(this);
+        searchSubFrame.add(searchSub, c);
 
-        searchSubText = new JTextField();
-        searchSubArea = new JTextArea();
-        searchSubLabel = new JLabel("enter substring");
+        c = new GridBagConstraints();
+        //c.anchor = GridBagConstraints.CENTER;
+        c.gridx=1;
+        c.gridy=3;
+        c.insets = new Insets(10,10,10,10);
+        subClose = new JButton("Close");
+        subClose.addActionListener(this);
+        searchSubFrame.add(subClose, c);
 
-        searchSubFrame.add(searchSubLabel);
-        searchSubFrame.add(searchSubText);
-        searchSubFrame.add(searchSub);
-        searchSubFrame.add(searchSubArea);
-        searchSubFrame.add(searchSubClose);
 
-        searchSubFrame.setLayout(gridSub);
         searchSubFrame.setVisible(false);
-        searchSubFrame.setSize(300, 200);
         searchSubFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         searchSubFrame.setResizable(true);
+        searchSubFrame.pack();
 
 
          //  delete review  \\
         //*******************\\
         deleteFrame = new JFrame("delete review");
-        GridLayout gridDelete = new GridLayout(3,2);
-
-        deleteReviewButton = new JButton("delete review");
-        deleteReviewButton.addActionListener(this);
-        deleteReviewClose = new JButton("close");
-        deleteReviewClose.addActionListener(this);
-        deleteText = new JTextField();
-        deleteLabel = new JLabel("enter id to be deleted");
-
-        deleteFrame.add(deleteLabel);
-        deleteFrame.add(deleteText);
-        deleteFrame.add(deleteReviewButton);
-        deleteFrame.add(deleteReviewClose);
-
+        GridBagLayout gridDelete = new GridBagLayout();
         deleteFrame.setLayout(gridDelete);
+
+        c = new GridBagConstraints();
+        c.gridx=0;
+        c.gridy=0;
+        c.insets = new Insets(10,10,10,10);
+        deleteLabel = new JLabel("Enter Id To Delete: ");
+        deleteFrame.add(deleteLabel, c);
+
+        c = new GridBagConstraints();
+        c.gridx=1;
+        c.gridy=0;
+        c.gridwidth = 2;
+        c.insets = new Insets(10,10,10,10);
+        deleteText = new JTextField(15);
+        deleteFrame.add(deleteText, c);
+
+        c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        //c.fill = GridBagConstraints.VERTICAL;
+        c.gridx=0;
+        c.gridy=1;
+        c.gridwidth = 4;
+        c.insets = new Insets(10,10,10,10);
+        deleteArea = new JTextArea(10,15);
+        deletePane = new JScrollPane(deleteArea);
+        deleteArea.setEditable(false);
+        deleteFrame.add(deletePane, c);
+
+
+        c = new GridBagConstraints();
+        c.gridx=0;
+        c.gridy=3;
+        c.insets = new Insets(10,10,10,10);
+        deleteReviewButton = new JButton("Delete");
+        deleteReviewButton.addActionListener(this);
+        deleteFrame.add(deleteReviewButton, c);
+
+        c = new GridBagConstraints();
+        //c.anchor = GridBagConstraints.CENTER;
+        c.gridx=1;
+        c.gridy=3;
+        c.insets = new Insets(10,10,10,10);
+        deleteReviewClose = new JButton("Close");
+        deleteReviewClose.addActionListener(this);
+        deleteFrame.add(deleteReviewClose, c);
+
         deleteFrame.setVisible(false);
-        deleteFrame.setSize(300, 200);
         deleteFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         deleteFrame.setResizable(true);
-
-
-
-
-
-
-
+        deleteFrame.pack();
 
 
     }
@@ -423,6 +526,8 @@ public class MovieReviewApp implements ActionListener {
         if (event.getSource() == loadDB) {
             try {
                 rh.loadDB();
+                updateTable();
+
                 System.out.println("loaded");
             } catch (IOException e) {
                 System.out.println("Error Loading DataBase");
@@ -452,12 +557,17 @@ public class MovieReviewApp implements ActionListener {
             if(rb2.isSelected()){ realClass = 1; }
             if(rb3.isSelected()){ realClass = 2; }
             if(realClass == -1 || reviewsPath.getText().isEmpty()){
-                System.out.println("box box: " + reviewsPath.getText());
+                //System.out.println("box box: " + reviewsPath.getText());
+                //System.out.println("realClasssss: " + realClass);
                 warningFrame.setVisible(true);
             }
-            if(realClass < 2 && realClass > -1 && !reviewsPath.getText().isEmpty()){
+            if(realClass < 3 && realClass > -1 && !reviewsPath.getText().isEmpty()){
                 try {
                     rh.loadReviews(reviewsPath.getText(), realClass);
+                    updateTable();
+                    updateAccuracy();
+                    mainFrame.repaint();
+                    mainFrame.pack();
                     reviewFrame.dispose();
                 }
                 catch(NullPointerException e){
@@ -495,7 +605,6 @@ public class MovieReviewApp implements ActionListener {
                     (rh.getNegWordsFilePath().contains(".txt")) && rh.getPosWordsFilePath().contains(".txt")) {
                 try {
                     rh.loadPosNegWords();
-                    //System.out.println("Passed");
                     negPos.dispose();
                     mainFrame.setVisible(true);
                 } catch (IOException e) {
@@ -505,7 +614,6 @@ public class MovieReviewApp implements ActionListener {
                 }
             }
             else{
-                //System.out.println("failed");
                 warningWords.setVisible(true);
             }
         }
@@ -518,17 +626,29 @@ public class MovieReviewApp implements ActionListener {
         if(event.getSource() == searchReview){
             searchIdFrame.setVisible(true);
         }
-        if(event.getSource() == searchId){
-            int temp = Integer.parseInt(searchIdText.getText());
-            MovieReview mr = rh.searchById(temp);
-            searchIdArea.setText("");
-            searchIdArea.append("Review ID: " + mr.getId() + "\n" +
-                                "Real Score: " + mr.getRealScore() + "\n" +
-                                "Predicted Score: " + mr.getPredictedScore() + "\n" +
-                                "Text: " + mr.getText().substring(0,20) + "...");
 
+
+        if(event.getSource() == searchId){
+            searchIdArea.setText("");
+            String idStr = searchIdText.getText();
+            if (!idStr.matches("-?(0|[1-9]\\d*)")) {
+                searchIdArea.setText("Illegal input.");
+            }
+            else if (!rh.getDatabase().containsKey(Integer.parseInt(idStr))) {
+                searchIdArea.setText("Id " + idStr + " not found.");
+            }
+            else {
+                int id = Integer.parseInt(idStr);
+                MovieReview mr = rh.searchById(id);
+                searchIdArea.setText("");
+                searchIdArea.append("Review Id: " + mr.getId() + "\n" +
+                        "Real Score: " + mr.getRealScore() + "\n" +
+                        "Predicted Score: " + mr.getPredictedScore() + "\n" +
+                        "Text: " + mr.getText().substring(0,35) + "...");
+            }
 
         }
+
         if(event.getSource() == searchClose){
             searchIdFrame.dispose();
         }
@@ -537,19 +657,32 @@ public class MovieReviewApp implements ActionListener {
         if(event.getSource() == searchSubReview){
             searchSubFrame.setVisible(true);
         }
+
         if(event.getSource() == searchSub){
+            int counter = 0;
             String temp = searchSubText.getText();
+            subLabelAgain.setText("");
+
             List<MovieReview> reviewList = rh.searchBySubstring(temp);
-            for( MovieReview mr : reviewList ) {
-                searchSubArea.setText("");
-                searchSubArea.append("Review ID: " + mr.getId() + "\n" +
-                        "Real Score: " + mr.getRealScore() + "\n" +
-                        "Predicted Score: " + mr.getPredictedScore() + "\n" +
-                        "Text: " + mr.getText().substring(0, 20) + "...");
+            if(reviewList != null) {
+                for (MovieReview mr : reviewList) {
+                    //searchSubArea.setText("");
+                    searchSubArea.append("Review ID: " + mr.getId() + "\n" +
+                            "Real Score: " + mr.getRealScore() + "\n" +
+                            "Predicted Score: " + mr.getPredictedScore() + "\n" +
+                            "Text: " + mr.getText().substring(0, 30) + "..." + "\n");
+                    counter++;
+                }
+                searchSubArea.append("\n" + "Total reviews found containing \"" + temp + "\": " + counter);
+
+            }
+            else{
+                searchSubArea.setText("Substring couldn't be found");
+
             }
 
         }
-        if(event.getSource() == searchSubClose){
+        if(event.getSource() == subClose){
             searchSubFrame.dispose();
         }
 
@@ -558,9 +691,22 @@ public class MovieReviewApp implements ActionListener {
             deleteFrame.setVisible(true);
         }
         if(event.getSource() == deleteReviewButton){
-            int temp = Integer.parseInt(deleteText.getText());
-            rh.deleteReview(temp);
-            deleteText.setText("");
+
+            String idStr = deleteText.getText();
+
+            if (!idStr.matches("-?(0|[1-9]\\d*)")) {
+                deleteArea.setText("Invalid Input");
+            }
+            else if (!rh.getDatabase().containsKey(Integer.parseInt(idStr))) {
+                deleteArea.setText("Id " + idStr + " not found.");
+            }
+            else {
+                int id = Integer.parseInt(idStr);
+                rh.deleteReview(id);
+                updateTable();
+                totalReviews.setText("Database Size: " + rh.getDatabase().size());
+                deleteArea.setText("Review " + id + " deleted");
+            }
 
         }
         if(event.getSource() == deleteReviewClose){
@@ -580,7 +726,39 @@ public class MovieReviewApp implements ActionListener {
 
     }
 
+public void updateTable(){
+        int id = 0;
+        int pred = 1;
+        int real = 2;
+        int path = 3;
+        int loop =0;
 
+        for (MovieReview mr : rh.getDatabase().values()){
+            mainTable.setValueAt(mr.getId(), loop, id);
+            mainTable.setValueAt(mr.getPredictedScore(), loop, pred);
+            mainTable.setValueAt(mr.getRealScore(), loop, real);
+            mainTable.setValueAt(mr.getFilePath(), loop, path);
+            loop++;
+        }
+}
+
+    public void updateAccuracy() {
+        double counter = 0;
+        double acc;
+
+        for (MovieReview mr : rh.getDatabase().values()) {
+            if (mr.getRealScore() == mr.getPredictedScore()) {
+                counter++;
+            }
+        }
+
+        acc = (counter / rh.getDatabase().size() * 100);
+        //acc = acc * 100;
+        accuracy.setText("Accuracy: " + acc +"%");
+        totalReviews.setText("Database Size: " + rh.getDatabase().size());
+
+
+    }
 
 
 
