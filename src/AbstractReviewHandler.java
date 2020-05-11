@@ -102,7 +102,6 @@ public abstract class AbstractReviewHandler {
         }
         System.out.println("Hash set is of size " + dictionary.size());
     }
-    
 
     /**
      * Loads reviews from a given path and stores them into the database. 

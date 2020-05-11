@@ -1,21 +1,24 @@
 package project3;
 
 import javax.swing.*;
-import java.awt.event.*;
 import java.awt.*;
-import java.io.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
  * Main application class. Provides functionality for interacting with the user.
- @author metsis
- @author tesic
- @author wen
+ * @author Arthur Hatgis
+ * @author Jeffery Slocum
  */
 public class MovieReviewApp implements ActionListener {
 
     public ReviewHandler rh = new ReviewHandler();
-
+    /**
+     * Buttons or GUI implements 
+     */
     public JFrame mainFrame, reviewFrame, negPos, warningWords, warningFrame,
             searchIdFrame, searchSubFrame, deleteFrame;
     public JButton loadDB, loadReviews, neg, pos, okWords,
@@ -33,7 +36,9 @@ public class MovieReviewApp implements ActionListener {
     public JTable mainTable;
     public JScrollPane mainTablePane, idPane, subPane, deletePane;
 
-
+    /**
+     * Constructor for main GUI
+     */
     MovieReviewApp(){
 
         //  load words \\
@@ -474,8 +479,10 @@ public class MovieReviewApp implements ActionListener {
         deleteFrame.pack();
 
     }
-
-
+    /**
+     * The interface for buttons and their respective actions after their event is triggered
+     * @param event The action of a user pressing a button on the GUI
+     */
     public void actionPerformed (ActionEvent event) {
 
         if (event.getSource() == loadDB) {
@@ -490,17 +497,14 @@ public class MovieReviewApp implements ActionListener {
             }
         }
         if(event.getSource()== saveDB){
-            try {
-                rh.saveDB();
-            }
+            try { rh.saveDB(); }
             catch(IOException e){
                 System.out.println("failed to save database");
                 return;
             }
         }
-        if (event.getSource() == loadReviews) {
-            reviewFrame.setVisible(true);
-        }
+        if (event.getSource() == loadReviews) reviewFrame.setVisible(true);
+
         if(event.getSource() == okReviews){
             int realClass = -1;
 
@@ -526,9 +530,8 @@ public class MovieReviewApp implements ActionListener {
                 }
             }
         }
-        if(event.getSource() == okWarnReviews){
-            warningFrame.dispose();
-        }
+        if(event.getSource() == okWarnReviews) warningFrame.dispose();
+
         if (event.getSource() == pos) {
             fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(new File("."));
@@ -562,16 +565,12 @@ public class MovieReviewApp implements ActionListener {
                     return;
                 }
             }
-            else{
-                warningWords.setVisible(true);
-            }
+            else warningWords.setVisible(true);
         }
-        if(event.getSource() == okWarning){
-            warningWords.dispose();
-        }
-        if(event.getSource() == searchReview){
-            searchIdFrame.setVisible(true);
-        }
+        if(event.getSource() == okWarning) warningWords.dispose();
+
+        if(event.getSource() == searchReview) searchIdFrame.setVisible(true);
+
         if(event.getSource() == searchId){
             searchIdArea.setText("");
             String idStr = searchIdText.getText();
@@ -619,22 +618,13 @@ public class MovieReviewApp implements ActionListener {
                 searchSubArea.setText("Substring couldn't be found");
             }
         }
-        if(event.getSource() == subClose){
-            searchSubFrame.dispose();
-        }
-        if(event.getSource() == deleteReview){
-            deleteFrame.setVisible(true);
-        }
+        if(event.getSource() == subClose) searchSubFrame.dispose();
+        if(event.getSource() == deleteReview) deleteFrame.setVisible(true);
         if(event.getSource() == deleteReviewButton){
-
             String idStr = deleteText.getText();
 
-            if (!idStr.matches("-?(0|[1-9]\\d*)")) {
-                deleteArea.setText("Invalid Input");
-            }
-            else if (!rh.getDatabase().containsKey(Integer.parseInt(idStr))) {
-                deleteArea.setText("Id " + idStr + " not found.");
-            }
+            if (!idStr.matches("-?(0|[1-9]\\d*)")) deleteArea.setText("Invalid Input");
+            else if (!rh.getDatabase().containsKey(Integer.parseInt(idStr))) deleteArea.setText("Id " + idStr + " not found.");
             else {
                 int id = Integer.parseInt(idStr);
                 rh.deleteReview(id);
@@ -642,22 +632,20 @@ public class MovieReviewApp implements ActionListener {
                 totalReviews.setText("Database Size: " + rh.getDatabase().size());
                 deleteArea.setText("Review " + id + " deleted");
             }
-
         }
-        if(event.getSource() == deleteReviewClose){
-            deleteFrame.dispose();
-        }
-
+        if(event.getSource() == deleteReviewClose)deleteFrame.dispose();
     }
-
-public void updateTable(){
+    /**
+     * Updates GUI table adds reviews to table via loop
+     */
+    public void updateTable(){
         int id = 0;
         int pred = 1;
         int real = 2;
         int path = 3;
         int loop =0;
 
-        for (MovieReview mr : rh.getDatabase().values()){
+        for (MovieReview mr : rh.getDatabase().values()) {
             mainTable.setValueAt(mr.getId(), loop, id);
             mainTable.setValueAt(mr.getPredictedScore(), loop, pred);
             mainTable.setValueAt(mr.getRealScore(), loop, real);
@@ -665,7 +653,9 @@ public void updateTable(){
             loop++;
         }
 }
-
+    /**
+     * Allows the program to compare its predicted scores to the reals scores and calculate its accuracy of correctness
+     */
     public void updateAccuracy() {
         double counter = 0;
         double acc;

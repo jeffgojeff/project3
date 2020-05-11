@@ -10,10 +10,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ * Main application class. Provides functionality for interacting with the user.
+ * @author Arthur Hatgis
+ * @author Jeffery Slocum
+ */
 
 public class ReviewHandler extends AbstractReviewHandler {
-
-
 
     /**
      * Loads reviews from a given path. If the given path is a .txt file, then
@@ -288,10 +291,6 @@ public class ReviewHandler extends AbstractReviewHandler {
     }
 
     public static void main(String [] args) {
-
         new MovieReviewApp();
-
     }
-
-
 }

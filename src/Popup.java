@@ -1,8 +1,15 @@
 // Java program to show a popup menu
 // and menu items to it
-import java.awt.*;
-import java.awt.event.*;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
+
+/**
+ * Handles GUI for extra windows needed buttons on the main gui is clicked
+ * @author Arthur Hatgis
+ * @author Jeffery Slocum
+ */
 class Popup extends JFrame implements ActionListener {
 
     // java button
