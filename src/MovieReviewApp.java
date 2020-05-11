@@ -681,8 +681,6 @@ public void updateTable(){
         newAcc = (int)acc;
         accuracy.setText("Accuracy: " + newAcc +"%");
         totalReviews.setText("Database Size: " + rh.getDatabase().size());
-
     }
-
 
 }
