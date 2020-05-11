@@ -287,5 +287,11 @@ public class ReviewHandler extends AbstractReviewHandler {
 
     }
 
+    public static void main(String [] args) {
+
+        new MovieReviewApp();
+
+    }
+
 
 }

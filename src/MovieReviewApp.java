@@ -1,10 +1,7 @@
 package project3;
 
-import java.util.Scanner;
-
 import javax.swing.*;
 import java.awt.event.*;
-//import java.awt.GridLayout;
 import java.awt.*;
 import java.io.*;
 import java.util.List;
@@ -16,7 +13,6 @@ import java.util.List;
  @author wen
  */
 public class MovieReviewApp implements ActionListener {
-
 
     public ReviewHandler rh = new ReviewHandler();
 
@@ -36,7 +32,6 @@ public class MovieReviewApp implements ActionListener {
     public JTextArea searchIdArea, searchSubArea, deleteArea;
     public JTable mainTable;
     public JScrollPane mainTablePane, idPane, subPane, deletePane;
-
 
 
     MovieReviewApp(){
@@ -69,15 +64,11 @@ public class MovieReviewApp implements ActionListener {
         okWords.addActionListener(this);
         negPos.add(okWords, w);
 
-
-
-
         ///change back to true
         negPos.setVisible(true);
         negPos.setSize(500, 200);
         negPos.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         negPos.setResizable(false);
-
 
         //   warning   \\
         //**************\\
@@ -85,7 +76,6 @@ public class MovieReviewApp implements ActionListener {
         GridBagLayout grid2 = new GridBagLayout();
         warningWords.setLayout(grid2);
         GridBagConstraints cc = new GridBagConstraints();
-        //cc.fill = GridBagConstraints.HORIZONTAL;
         cc.insets = new Insets(2,2,2,2);
         cc.anchor = GridBagConstraints.CENTER;
 
@@ -104,8 +94,6 @@ public class MovieReviewApp implements ActionListener {
         warningWords.setSize(300, 180);
         warningWords.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         warningWords.setResizable(false);
-
-
 
         //  Main Frame \\
         //**************\\
@@ -143,7 +131,6 @@ public class MovieReviewApp implements ActionListener {
         mainTable.setEnabled(true);
         mainTablePane = new JScrollPane(mainTable);
 
-
         c = new GridBagConstraints();
         c.insets = new Insets(1,10,10,10);
         c.gridx = 0;
@@ -159,7 +146,6 @@ public class MovieReviewApp implements ActionListener {
         c.gridwidth = 4;
         mainFrame.add(mainTablePane, c);
 
-
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 4;
@@ -171,8 +157,6 @@ public class MovieReviewApp implements ActionListener {
         useless = new JLabel("");
         bottomPanel.add(useless);
         mainFrame.add(bottomPanel, c);
-
-
 
         searchPanel = new JPanel();
         searchPanel.setLayout(new GridLayout(1,3));
@@ -194,8 +178,6 @@ public class MovieReviewApp implements ActionListener {
         c.insets = new Insets(10,50,10,10);
         mainFrame.add(searchPanel, c);
 
-
-
         loadPanel = new JPanel();
         loadPanel.setLayout(new GridLayout(1,3));
 
@@ -216,14 +198,10 @@ public class MovieReviewApp implements ActionListener {
         c.insets = new Insets(10,50,10,10);
         mainFrame.add(loadPanel, c);
 
-
-        ///change back to false
         mainFrame.setVisible(false);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setResizable(true);
         mainFrame.pack();
-
-
 
         // load reviews class selection \\
         //*******************************\\
@@ -296,9 +274,6 @@ public class MovieReviewApp implements ActionListener {
         reviewFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         reviewFrame.setVisible(false);
 
-
-
-
          //  loadReviews Warning \\
         //***********************\\
         warningFrame = new JFrame("Warning");
@@ -319,20 +294,16 @@ public class MovieReviewApp implements ActionListener {
         okWarnReviews.addActionListener(this);
         warningFrame.add(okWarnReviews, g);
 
-
         warningFrame.setVisible(false);
         warningFrame.setSize(550, 200);
         warningFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         warningFrame.setResizable(false);
-
-
 
          // search review Id \\
         //********************\\
         searchIdFrame = new JFrame("Search by ID");
         GridBagLayout gridSearch = new GridBagLayout();
         searchIdFrame.setLayout(gridSearch);
-
 
         c = new GridBagConstraints();
         c.gridx=0;
@@ -365,7 +336,6 @@ public class MovieReviewApp implements ActionListener {
         c.gridy=2;
         c.insets = new Insets(10,10,10,10);
         searchLabelAgain = new JLabel("");
-        //searchIdFrame.add(searchLabelAgain, c);
 
         c = new GridBagConstraints();
         c.gridx=0;
@@ -376,7 +346,6 @@ public class MovieReviewApp implements ActionListener {
         searchIdFrame.add(searchId, c);
 
         c = new GridBagConstraints();
-        //c.anchor = GridBagConstraints.CENTER;
         c.gridx=1;
         c.gridy=3;
         c.insets = new Insets(10,10,10,10);
@@ -384,12 +353,10 @@ public class MovieReviewApp implements ActionListener {
         searchClose.addActionListener(this);
         searchIdFrame.add(searchClose, c);
 
-
         searchIdFrame.setVisible(false);
         searchIdFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         searchIdFrame.setResizable(true);
         searchIdFrame.pack();
-
 
          //  search review substring  \\
         //*****************************\\
@@ -397,7 +364,6 @@ public class MovieReviewApp implements ActionListener {
         subPanel = new JPanel();
         GridBagLayout gridSub = new GridBagLayout();
         searchSubFrame.setLayout(gridSub);
-
 
         c = new GridBagConstraints();
         c.gridx=0;
@@ -416,7 +382,6 @@ public class MovieReviewApp implements ActionListener {
 
         c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
-        //c.fill = GridBagConstraints.VERTICAL;
         c.gridx=0;
         c.gridy=1;
         c.gridwidth = 4;
@@ -430,7 +395,6 @@ public class MovieReviewApp implements ActionListener {
         c.anchor = GridBagConstraints.CENTER;
         c.gridx=0;
         c.gridy=2;
-        //c.insets = new Insets(10,10,10,10);
         subLabelAgain = new JLabel("");
         searchSubFrame.add(subLabelAgain, c);
 
@@ -443,14 +407,12 @@ public class MovieReviewApp implements ActionListener {
         searchSubFrame.add(searchSub, c);
 
         c = new GridBagConstraints();
-        //c.anchor = GridBagConstraints.CENTER;
         c.gridx=1;
         c.gridy=3;
         c.insets = new Insets(10,10,10,10);
         subClose = new JButton("Close");
         subClose.addActionListener(this);
         searchSubFrame.add(subClose, c);
-
 
         searchSubFrame.setVisible(false);
         searchSubFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -481,7 +443,6 @@ public class MovieReviewApp implements ActionListener {
 
         c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
-        //c.fill = GridBagConstraints.VERTICAL;
         c.gridx=0;
         c.gridy=1;
         c.gridwidth = 4;
@@ -490,7 +451,6 @@ public class MovieReviewApp implements ActionListener {
         deletePane = new JScrollPane(deleteArea);
         deleteArea.setEditable(false);
         deleteFrame.add(deletePane, c);
-
 
         c = new GridBagConstraints();
         c.gridx=0;
@@ -501,7 +461,6 @@ public class MovieReviewApp implements ActionListener {
         deleteFrame.add(deleteReviewButton, c);
 
         c = new GridBagConstraints();
-        //c.anchor = GridBagConstraints.CENTER;
         c.gridx=1;
         c.gridy=3;
         c.insets = new Insets(10,10,10,10);
@@ -514,27 +473,21 @@ public class MovieReviewApp implements ActionListener {
         deleteFrame.setResizable(true);
         deleteFrame.pack();
 
-
     }
 
 
-
     public void actionPerformed (ActionEvent event) {
-
-
 
         if (event.getSource() == loadDB) {
             try {
                 rh.loadDB();
                 updateTable();
-
                 System.out.println("loaded");
             } catch (IOException e) {
                 System.out.println("Error Loading DataBase");
                 System.out.println("Please try again");
                 return;
             }
-
         }
         if(event.getSource()== saveDB){
             try {
@@ -545,8 +498,6 @@ public class MovieReviewApp implements ActionListener {
                 return;
             }
         }
-
-
         if (event.getSource() == loadReviews) {
             reviewFrame.setVisible(true);
         }
@@ -557,8 +508,6 @@ public class MovieReviewApp implements ActionListener {
             if(rb2.isSelected()){ realClass = 1; }
             if(rb3.isSelected()){ realClass = 2; }
             if(realClass == -1 || reviewsPath.getText().isEmpty()){
-                //System.out.println("box box: " + reviewsPath.getText());
-                //System.out.println("realClasssss: " + realClass);
                 warningFrame.setVisible(true);
             }
             if(realClass < 3 && realClass > -1 && !reviewsPath.getText().isEmpty()){
@@ -620,14 +569,9 @@ public class MovieReviewApp implements ActionListener {
         if(event.getSource() == okWarning){
             warningWords.dispose();
         }
-
-
-
         if(event.getSource() == searchReview){
             searchIdFrame.setVisible(true);
         }
-
-
         if(event.getSource() == searchId){
             searchIdArea.setText("");
             String idStr = searchIdText.getText();
@@ -646,14 +590,10 @@ public class MovieReviewApp implements ActionListener {
                         "Predicted Score: " + mr.getPredictedScore() + "\n" +
                         "Text: " + mr.getText().substring(0,35) + "...");
             }
-
         }
-
         if(event.getSource() == searchClose){
             searchIdFrame.dispose();
         }
-
-
         if(event.getSource() == searchSubReview){
             searchSubFrame.setVisible(true);
         }
@@ -674,19 +614,14 @@ public class MovieReviewApp implements ActionListener {
                     counter++;
                 }
                 searchSubArea.append("\n" + "Total reviews found containing \"" + temp + "\": " + counter);
-
             }
             else{
                 searchSubArea.setText("Substring couldn't be found");
-
             }
-
         }
         if(event.getSource() == subClose){
             searchSubFrame.dispose();
         }
-
-
         if(event.getSource() == deleteReview){
             deleteFrame.setVisible(true);
         }
@@ -713,17 +648,6 @@ public class MovieReviewApp implements ActionListener {
             deleteFrame.dispose();
         }
 
-
-
-
-
-
-
-
-
-
-
-
     }
 
 public void updateTable(){
@@ -745,6 +669,7 @@ public void updateTable(){
     public void updateAccuracy() {
         double counter = 0;
         double acc;
+        int newAcc;
 
         for (MovieReview mr : rh.getDatabase().values()) {
             if (mr.getRealScore() == mr.getPredictedScore()) {
@@ -753,203 +678,11 @@ public void updateTable(){
         }
 
         acc = (counter / rh.getDatabase().size() * 100);
-        //acc = acc * 100;
-        accuracy.setText("Accuracy: " + acc +"%");
+        newAcc = (int)acc;
+        accuracy.setText("Accuracy: " + newAcc +"%");
         totalReviews.setText("Database Size: " + rh.getDatabase().size());
 
-
     }
 
-
-
-
-
-
-
-    public static void main(String [] args) {
-
-        new MovieReviewApp();
-
-
-    }
-
-        /*
-        // Check if the correct number of arguments was provided
-        if (args.length < 2) {
-            System.err.println("Please provide command liner arguments: <posFilePath> and <negFilePath>");
-            return;
-        }
-
-        String pathToPosWords = args[0];
-        String pathToNegWords = args[1];
-
-        // Create ReviewHandler object
-        ReviewHandler rh = new ReviewHandler();
-
-        try {
-            // Load the positive and negative words
-            rh.loadPosNegWords(pathToPosWords, pathToNegWords);
-        } catch (IOException ex) {
-            System.err.println("Could not load positive and negative words. "
-                    + "Please check that the file paths are correct and try again.");
-            return;
-        }
-
-        try {
-            // Load database if it exists.
-            rh.loadDB();
-        } catch (IOException ex) {
-            System.err.println("Error accessing the database file.");
-            return;
-        }
-
-        String welcomeMessage = "\nDatabase size: " + rh.getDatabase().size() +
-                "\nChoose one of the following functions:\n\n"
-                + "\t 0. Exit program.\n"
-                + "\t 1. Load new movie review collection (given a folder or a file path).\n"
-                + "\t 2. Delete movie review from database (given its id).\n"
-                + "\t 3. Search movie reviews in database by id or by matching a substring.\n";
-
-        //Output welcome message
-        System.out.println(welcomeMessage);
-        String selection = CONSOLE_INPUT.nextLine();
-
-        while (!selection.equals("0")) {
-            switch (selection) {
-                case "1":
-                    // 1. Load new movie review collection (given a folder or a file path).
-                    System.out.println("Please input the path of file or folder.");
-                    // ./Data/Movie-reviews/neg
-                    String path = CONSOLE_INPUT.nextLine();
-                    //check if path exists
-                    if (Files.exists(Path.of(path))){
-
-                        System.out.println("Please input real class (0, 1, 2).");
-                        System.out.println("0 = negative, 1 = positive, 2 = unknown.");
-
-                        //default is unknown
-                        int realClass = 2;
-                        String reviewStr = CONSOLE_INPUT.nextLine();
-
-                        if (!reviewStr.matches("-?(0|[1-9]\\d*)")) {
-                            // Input is not an integer
-                            System.out.println("Illegal input.");
-                        } else {
-                            realClass = Integer.parseInt(reviewStr);
-                            if (realClass < 0 && realClass > 2){
-                                System.out.println("Not a correct choice, setting ground truth classification to UNKNOWN");
-                                realClass = 2;
-                            }
-                            rh.loadReviews(path, realClass);
-                            System.out.println("Database size: " + rh.getDatabase().size());
-                        }
-                    }else{
-                        System.out.println("Not a correct file or folder: " + path);
-                        System.out.println("Try again.");
-                    }
-                    break;
-                case "2":
-                    // 2. Delete movie review from database (given its id).
-                    System.out.println("Please input review ID.");
-                    String idStr = CONSOLE_INPUT.nextLine();
-
-                    if (!idStr.matches("-?(0|[1-9]\\d*)")) {
-                        // Input is not an integer
-                        System.out.println("Illegal input.");
-                    } else {
-                        int id = Integer.parseInt(idStr);
-                        rh.deleteReview(id);
-                    }
-
-                    break;
-
-                case "3":
-                    // 3. Search movie reviews in database by id or by matching a substring.
-                    System.out.println("Please input your command (1, 2).");
-                    System.out.println("1 = search by ID.");
-                    System.out.println("2 = search by substring");
-                    String command = CONSOLE_INPUT.nextLine();
-                    if (command.equals("1")) {
-                        System.out.println("Please input review ID.");
-                        idStr = CONSOLE_INPUT.nextLine();
-                        if (!idStr.matches("-?(0|[1-9]\\d*)")) {
-                            // Input is not an integer
-                            System.out.println("Illegal input.");
-                        } else {
-                            int id = Integer.parseInt(idStr);
-                            MovieReview mr = rh.searchById(id);
-                            if (mr != null) {
-                                printTableHead();
-                                printTableContent(mr);
-                            } else {
-                                System.out.println("Review not found.");
-                            }
-                        }
-
-                    } else if (command.equals("2")) {
-                        System.out.println("Please input substring.");
-                        String substring = CONSOLE_INPUT.nextLine();
-                        List<MovieReview> reviewList = rh.searchBySubstring(substring);
-                        if (reviewList != null) {
-                            printTableHead();
-                            for (MovieReview mr : reviewList) {
-                                printTableContent(mr);
-                            }
-                            System.out.println(reviewList.size() + " reviews found.");
-
-                        } else {
-                            System.out.println("Review not found.");
-                        }
-                    } else {
-                        System.out.println("Illegal input.");
-                    }
-                    break;
-                case "h":
-                    System.out.println(welcomeMessage);
-                    break;
-                default:
-                    System.out.println("That is not a recognized command. Please enter another command or 'h' to list the commands.");
-                    break;
-            }
-
-            System.out.println("Please enter another command or 'h' to list the commands.\n");
-            selection = CONSOLE_INPUT.nextLine();
-        }
-
-        try {
-            // Save the database before exiting.
-            rh.saveDB();
-        } catch (IOException ex) {
-            System.err.println("Error: The database file could not be saved.");
-        }
-        System.out.println("Goodbye!");
-    }
-
-    public static void printTableHead() {
-        String line = "------------------------------------------------------------------------------------------";
-        String information = "| ";
-        information = information + String.format("%4s", "ID") + " @ ";
-        information = information + String.format("%53s", "Text") + " @ ";
-        information = information + String.format("%10s", "Predicted") + " @ ";
-        information = information + String.format("%10s", "Real") + " @ ";
-
-        System.out.println(line);
-        System.out.println(information);
-        System.out.println(line);
-    }
-
-    public static void printTableContent(MovieReview mr) {
-        String line = "------------------------------------------------------------------------------------------";
-        String information = "| ";
-        information = information + String.format("%4s", mr.getId()) + " @ ";
-        information = information + String.format("%53s", mr.getText().substring(0, 50)+"..." ) + " @ ";
-        information = information + String.format("%10s", mr.getPredictedScore()) + " @ ";
-        information = information + String.format("%10s", mr.getPredictedScore()) + " @ ";
-
-        System.out.println(information);
-        System.out.println(line);
-    }
-
-         */
 
 }
