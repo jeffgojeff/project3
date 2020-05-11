@@ -31,33 +31,49 @@ public class MovieReviewApp implements ActionListener {
     public JRadioButton rb1, rb2, rb3;
     public JFileChooser fileChooser;
     public JLabel warning, reviewsClass, reviewsInfo, warningReviews, searchLabel, searchSubLabel,
-                deleteLabel;
-    public JPanel reviewsBG;
+                deleteLabel, mainLabel;
+    public JPanel reviewsBG, mainPanel;
     public JTextField reviewsPath, searchIdText, searchSubText, deleteText;
     public JTextArea mainArea, searchIdArea, searchSubArea;
+    public JTable mainTable;
 
 
 
     MovieReviewApp(){
+
         //  load words \\
         //**************\\
         negPos = new JFrame("Load Words");
-        GridLayout grid1 = new GridLayout(2,2,50,10);
+        GridBagLayout grid1 = new GridBagLayout();
+        GridBagConstraints w = new GridBagConstraints();
+        w.anchor = GridBagConstraints.CENTER;
+        negPos.setLayout(grid1);
+        w.insets = new Insets(2,2,2,2);
 
+        w.gridx = 0;
+        w.gridy = 0;
         neg = new JButton("Select Negative Words File");
         neg.addActionListener(this);
+        negPos.add(neg, w);
+
+        w.gridx=1;
         pos = new JButton("Select Positive Words File");
         pos.addActionListener(this);
-        okWords = new JButton("Load Words");
+        negPos.add(pos, w);
+
+        w.insets = new Insets(20,0,0,0);
+        w.gridx=0;
+        w.gridy=1;
+        w.gridwidth = 2;
+        okWords = new JButton("Load Selected Files");
         okWords.addActionListener(this);
+        negPos.add(okWords, w);
 
-        negPos.add(neg);
-        negPos.add(pos);
-        negPos.add(okWords);
 
-        negPos.setLayout(grid1);
+
+
         ///change back to true
-        negPos.setVisible(true);
+        negPos.setVisible(false);
         negPos.setSize(500, 200);
         negPos.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         negPos.setResizable(false);
@@ -66,22 +82,28 @@ public class MovieReviewApp implements ActionListener {
         //   warning   \\
         //**************\\
         warningWords = new JFrame("Warning");
-        GridLayout grid2 = new GridLayout(2,1,100,50);
-
-        warning = new JLabel("Please select word lists before continuing");
-        okWarning = new JButton("Ok");
-        okWarning.addActionListener(this);
-
-        warningWords.add(warning);
-        warningWords.add(okWarning);
-
+        GridBagLayout grid2 = new GridBagLayout();
         warningWords.setLayout(grid2);
+        GridBagConstraints cc = new GridBagConstraints();
+        //cc.fill = GridBagConstraints.HORIZONTAL;
+        cc.insets = new Insets(2,2,2,2);
+        cc.anchor = GridBagConstraints.CENTER;
+
+        cc.gridx=0;
+        cc.gridy=0;
+        warning = new JLabel("Please select word lists before continuing");
+        warningWords.add(warning, cc);
+
+        cc.insets = new Insets(20,0,0,0);
+        cc.gridy=1;
+        okWarning = new JButton("OK");
+        okWarning.addActionListener(this);
+        warningWords.add(okWarning, cc);
+
         warningWords.setVisible(false);
-        warningWords.setSize(300, 200);
+        warningWords.setSize(300, 180);
         warningWords.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         warningWords.setResizable(false);
-
-
 
 
 
@@ -89,40 +111,86 @@ public class MovieReviewApp implements ActionListener {
         //**************\\
 
         mainFrame = new JFrame("MovieReviewApp");
-        GridLayout grid = new GridLayout(5,3,2,4);
+        GridBagLayout grid = new GridBagLayout();
+        GridBagConstraints c = new GridBagConstraints();
+        mainFrame.setLayout(grid);
+        c.insets = new Insets(2,2,2,2);
+        c.anchor = GridBagConstraints.CENTER;
 
+        mainLabel = new JLabel("Movie Review App");
+        //Font labelFont = label.getFont();
+        mainLabel.setFont(new Font(mainLabel.getFont().getName(), Font.BOLD, 26));
+        c.gridy = 0;
+        c.gridx = 0;
+        mainFrame.add(mainLabel, c);
+
+        c.fill = GridBagConstraints.HORIZONTAL;
+
+        mainPanel = new JPanel();
+        mainPanel.setLayout(grid);
+
+        c.gridx = 0;
+        c.gridy = 1;
+        c.ipadx = 15;
+        c.ipady = 50;
         loadDB = new JButton("Load DataBase");
         loadDB.addActionListener(this);
+        mainPanel.add(loadDB, c);
 
+        c.gridx = 1;
+        c.gridy = 1;
         saveDB = new JButton("Save DataBase");
         saveDB.addActionListener(this);
+        mainPanel.add(saveDB, c);
 
+        c.gridx = 0;
+        c.gridy = 2;
         loadReviews = new JButton("Load Reviews");
         loadReviews.addActionListener(this);
+        mainPanel.add(loadReviews,c);
 
+        c.gridx = 1;
+        c.gridy = 2;
         searchReview = new JButton("search id");
         searchReview.addActionListener(this);
+        mainPanel.add(searchReview, c);
 
+        c.gridx = 0;
+        c.gridy = 3;
         searchSubReview = new JButton("search sub");
         searchSubReview.addActionListener(this);
+        mainPanel.add(searchSubReview, c);
 
+        c.gridx = 1;
+        c.gridy = 3;
         deleteReview = new JButton("delete Review");
         deleteReview.addActionListener(this);
+        mainPanel.add(deleteReview, c);
+
+        c.gridx = 0;
+        c.gridy = 3;
+        mainFrame.add(mainPanel, c);
 
 
+        /*
         mainArea = new JTextArea();
         mainArea.setEditable(false);
+         */
+        String[] columnNames = { "Id", "something", "something" };
+        String[][] data = {
+                { "Kundan Kumar Jha", "4031", "CSE" },
+                { "Anand Jha", "6014", "IT" }
+        };
+        mainTable = new JTable(data, columnNames);
+
+        //c.gridx = 0;
+        c.gridy = 4;
+        c.ipadx = 800;
+        c.ipady = 300;
+
+        mainFrame.add(mainTable, c);
 
 
-        mainFrame.add(loadDB);
-        mainFrame.add(saveDB);
-        mainFrame.add(loadReviews);
-        mainFrame.add(searchReview);
-        mainFrame.add(searchSubReview);
-        mainFrame.add(deleteReview);
-        mainFrame.add(mainArea);
-
-        mainFrame.setLayout(grid);
         ///change back to false
         mainFrame.setVisible(false);
         mainFrame.setSize(800,800);
@@ -135,10 +203,19 @@ public class MovieReviewApp implements ActionListener {
         // load reviews class selection \\
         //*******************************\\
         reviewFrame = new JFrame("Load Reviews");
-        GridLayout gridReview = new GridLayout(4,2,2,4);
+        GridBagLayout gridReview = new GridBagLayout();
+        reviewFrame.setLayout(gridReview);
+        GridBagConstraints g = new GridBagConstraints();
+        g.insets = new Insets(2,2,2,2);
+        g.anchor = GridBagConstraints.CENTER;
+        g.fill = GridBagConstraints.HORIZONTAL;
 
         reviewsClass = new JLabel("Please select the real class for the reviews");
-        reviewsClass.setHorizontalAlignment(JLabel.CENTER);
+        g.gridx = 0;
+        g.gridy = 0;
+        g.ipadx = 10;
+        g.ipady = 20;
+        reviewFrame.add(reviewsClass, g);
 
         reviewsBG = new JPanel();
         ButtonGroup group = new ButtonGroup();
@@ -159,46 +236,66 @@ public class MovieReviewApp implements ActionListener {
         group.add(rb2);
         group.add(rb3);
 
-        reviewsPath = new JTextField();
-        reviewsInfo = new JLabel("Enter reviews path: ");
-
-
-
         reviewsBG.add(rb1);
         reviewsBG.add(rb2);
         reviewsBG.add(rb3);
 
-        reviewFrame.add(reviewsClass);
-        reviewFrame.add(reviewsBG);
-        reviewFrame.add(reviewsInfo);
-        reviewFrame.add(reviewsPath);
-        reviewFrame.add(okReviews);
+        g.gridx=1;
+        g.gridy=0;
+        g.ipady=20;
+        reviewFrame.add(reviewsBG, g);
 
-        reviewFrame.setLayout(gridReview);
+        g.gridx=0;
+        g.gridy=1;
+        reviewsInfo = new JLabel("Enter reviews path: ");
+        reviewFrame.add(reviewsInfo, g);
+
+        g.gridx=1;
+        g.gridy=1;
+        g.ipadx=50;
+        g.ipady=20;
+        reviewsPath = new JTextField();
+        reviewFrame.add(reviewsPath, g);
+
+        g.anchor = GridBagConstraints.CENTER;
+        g.fill = GridBagConstraints.NONE;
+        g.insets= new Insets(20,2,2,2);
+        g.gridx=0;
+        g.gridy=3;
+        g.ipadx=30;
+        g.ipady=20;
+        g.gridwidth = 2;
+        reviewFrame.add(okReviews, g);
+
         reviewFrame.setSize(600,300);
         reviewFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        reviewFrame.setVisible(false);
-
-
+        reviewFrame.setVisible(true);
 
 
 
          //  loadReviews Warning \\
         //***********************\\
         warningFrame = new JFrame("Warning");
-        GridLayout gridReviews = new GridLayout(2,1,100,50);
-
-        warningReviews = new JLabel("Please select real class and enter a correct destination before continuing");
-        warningReviews.setHorizontalAlignment(JLabel.CENTER);
-        okWarnReviews = new JButton("Ok");
-        okWarnReviews.addActionListener(this);
-
-        warningFrame.add(warningReviews);
-        warningFrame.add(okWarnReviews);
-
+        GridBagLayout gridReviews = new GridBagLayout();
         warningFrame.setLayout(gridReviews);
+
+        g.gridx=0;
+        g.gridy=0;
+        warningReviews = new JLabel("Please select real class and enter a correct destination before continuing");
+        warningFrame.add(warningReviews, g);
+
+        g.gridx=0;
+        g.gridy=1;
+        g.ipady=0;
+        g.ipadx=30;
+        g.gridwidth = 0;
+        okWarnReviews = new JButton("OK");
+        okWarnReviews.addActionListener(this);
+        warningFrame.add(okWarnReviews, g);
+
+
         warningFrame.setVisible(false);
-        warningFrame.setSize(300, 200);
+        warningFrame.setSize(550, 200);
         warningFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         warningFrame.setResizable(false);
 
@@ -207,26 +304,52 @@ public class MovieReviewApp implements ActionListener {
          //  search review  \\
         //*******************\
         searchIdFrame = new JFrame("Search by ID");
-        GridLayout gridSearch = new GridLayout(3,2);
+        GridBagLayout gridSearch = new GridBagLayout();
+        searchIdFrame.setLayout(gridSearch);
+        GridBagConstraints con = new GridBagConstraints();
+        //con.fill = GridBagConstraints.HORIZONTAL;
+        //g.anchor = GridBagConstraints.CENTER;
 
+
+
+        con.gridx=0;
+        con.gridy=0;
+        searchLabel = new JLabel("Enter ID:");
+        searchIdFrame.add(searchLabel, con);
+
+        con.gridx=1;
+        con.gridy=0;
+        con.ipadx=100;
+        searchIdText = new JTextField();
+        searchIdFrame.add(searchIdText, con);
+
+
+        con.gridx=0;
+        con.gridy=1;
+        con.ipadx=300;
+        con.ipady=300;
+        con.gridwidth=2;
+        searchIdArea = new JTextArea();
+        searchIdArea.setEditable(false);
+        searchIdFrame.add(searchIdArea, con);
+
+        con.gridx=0;
+        con.gridy=2;
+        con.ipadx=0;
+        con.ipady=0;
         searchId = new JButton("Search");
         searchId.addActionListener(this);
-        searchClose = new JButton("close");
+        searchIdFrame.add(searchId, con);
+
+        con.gridx=1;
+        con.gridy=2;
+        searchClose = new JButton("Close");
         searchClose.addActionListener(this);
+        searchIdFrame.add(searchClose, con);
 
-        searchIdText = new JTextField();
-        searchIdArea = new JTextArea();
-        searchLabel = new JLabel("enter id");
 
-        searchIdFrame.add(searchLabel);
-        searchIdFrame.add(searchIdText);
-        searchIdFrame.add(searchId);
-        searchIdFrame.add(searchIdArea);
-        searchIdFrame.add(searchClose);
-
-        searchIdFrame.setLayout(gridSearch);
-        searchIdFrame.setVisible(false);
-        searchIdFrame.setSize(300, 200);
+        searchIdFrame.setVisible(true);
+        searchIdFrame.setSize(600, 500);
         searchIdFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         searchIdFrame.setResizable(true);
 
@@ -306,6 +429,7 @@ public class MovieReviewApp implements ActionListener {
                 System.out.println("Please try again");
                 return;
             }
+
         }
         if(event.getSource()== saveDB){
             try {
